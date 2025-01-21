@@ -190,7 +190,7 @@
       function sendBridge() {
         const functionName = document.getElementById("txtJSBFunc").value;
         const functionCallBack = document.getElementById("txtJSBCallBack").value;
-        const message = document.getElementById("txtJSBData").value;
+        const message = getDataFromInputs()
         
         if (!functionName) {
 					showModal("functionName field is required!");
@@ -215,12 +215,17 @@
         
 				document.getElementById("txtJSBFunc").value = "";
         document.getElementById("txtJSBCallBack").value = "";
+        
+        const container = document.getElementById("inputFieldsContainer");
+		    while (container.firstChild) {
+		        container.removeChild(container.firstChild);  // ลบ element แรกของ container
+		    }
       }
       
       function clearJSBridge() {
 				document.getElementById("txtJSBFunc").value = "";
         document.getElementById("txtJSBCallBack").value = "";
-				
+        
 				clearCallback()
       }
       
@@ -242,18 +247,26 @@
       }
         
       function callNativeFunction(functionName, message) {
-        try {
-          if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
-            if (message == '') {
-              window.JSBridge[functionName]();
-            } else {
-              window.JSBridge[functionName](message);
-            }
-          } else {
-            console.error("Function " + functionName + " not found in JSBridge interface.");
+        if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
+          switch(message.length) {
+            case 1:
+							window.JSBridge[functionName](message[0]);
+							break;
+						case 2:
+							window.JSBridge[functionName](message[0], message[1]);
+							break;
+						case 3:
+							window.JSBridge[functionName](message[0], message[1], message[2]);
+							break;
+						case 4:
+							window.JSBridge[functionName](message[0], message[1], message[2], message[3]);
+							break;
+            default:
+							window.JSBridge[functionName]();
+              break;
           }
-        } catch (error) {
-          showModal(error.message)
+        } else {
+          console.error("Function " + functionName + " not found in JSBridge interface.");
         }
       }
       
@@ -265,12 +278,49 @@
 	    function closeModal() {
 	        document.getElementById('myModal').style.display = 'none';
 	    }
+	    
+	    function addInputField() {
+            const newDiv = document.createElement("div");
+            newDiv.classList.add("input-container");
+            newDiv.style.width = "100%"; 
+            newDiv.style.display = "flex";
+            newDiv.style.marginLeft = "16px";
+            newDiv.style.marginRight = "16px";
+
+            const newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.placeholder = "Enter value";
+            newInput.style.flex = 0.8;
+            
+            const removeButton = document.createElement("button");
+            removeButton.textContent = "Remove";
+            removeButton.classList.add("remove-button");
+            removeButton.style.marginLeft = "8px";
+            removeButton.onclick = function() {
+                newDiv.remove(); 
+            };
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(removeButton);
+            document.getElementById("inputFieldsContainer").appendChild(newDiv);
+        }
+        
+        function getDataFromInputs() {
+				    const inputContainer = document.getElementById("inputFieldsContainer");
+				    const inputs = inputContainer.getElementsByTagName("input");
+				    const inputValues = [];
+				
+				    for (let input of inputs) {
+				        inputValues.push(input.value);
+				    }
+				
+				    return inputValues;
+				}
     </script>
 	</head>
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.000.002</h1>
+				<h1>Send JavaScript Bridge Message</h1>
 			</div>
 			
 			<div class="box-center">
@@ -287,7 +337,10 @@
 					
 					<div class="form-group">
 						<span>Data value</span>
-						<textarea class="form-field" id="txtJSBData" name="Text1" cols="40" rows="5" placeholder="Enter value"></textarea>
+						<div class="box-vertical form-field expand" id="inputFieldsContainer">
+							
+						</div>
+						<button class="button button-primary" onclick="addInputField()">Add Input Field</button>
 					</div>
 					
 					<div class="form-actions">
