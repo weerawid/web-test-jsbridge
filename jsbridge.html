@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Bridge to Android</title>
+    
+    <style>
+      :root {
+        
+        --color_primary: #03a2e0;
+        --color_primary_light: #D5E7F2;
+        --color_white: #FFFFFF;
+        --color_black: #000000;
+        
+        --txt_white: #FFFFFF;
+        --txt_black: #000000;
+        
+        --txt_topic_size: 12px;
+        --txt_normal_size: 10px;
+      }
+    
+      .box-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .box-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .expand {
+        flex: 1;
+      }
+      
+      .button {
+				border-radius: 8px;
+			  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+			  box-sizing: border-box;
+			  cursor: pointer;
+			  display: inline-block;
+			  font-family: "Amazon Ember",sans-serif;
+			  font-size: 13px;
+			  line-height: 29px;
+			  padding: 0 10px 0 11px;
+			  position: relative;
+			  text-align: center;
+			  text-decoration: none;
+			  user-select: none;
+			  -webkit-user-select: none;
+			  touch-action: manipulation;
+			  vertical-align: middle;
+      }
+      
+      .button-primary {
+			  background-color: var(--color_primary) ;
+			  border: 1px solid var(--color_primary_light);
+			  color: var(--txt_white);
+			  &:hover {
+					background-color: var(--color_primary_light);
+					color: var(--txt_black);
+			  }
+			  &:focus {
+				  border-color: #008296;
+				  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+				  outline: 0;
+				}
+			}
+			
+			.button-default {
+			  background-color: var(--color_white) ;
+			  border: 1px solid var(--color_white);
+			  color: var(--txt_black);
+			  &:hover {
+					background-color: var(--color_primary_light);
+					color: var(--txt_black);
+			  }
+			  &:focus {
+				  border-color: #008296;
+				  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+				  outline: 0;
+				}
+			}
+			
+			.form-actions {
+		    text-align: center;
+			}
+			
+			.form-group {
+		    position: relative;
+		    display: flex;
+		    width: 100%;
+		    & > span,
+		    .form-field {
+		        white-space: nowrap;
+		        display: block;
+		        &:not(:first-child):not(:last-child) {
+		            border-radius: 0;
+		        }
+		        &:first-child {
+		            border-radius: 6px 0 0 6px;
+		        }
+		        &:last-child {
+		            border-radius: 0 6px 6px 0;
+		        }
+		        &:not(:first-child) {
+		            margin-left: -1px;
+		        }
+		    }
+		    .form-field {
+		        position: relative;
+		        z-index: 1;
+		        flex: 1 1 auto;
+		        width: 1%;
+		        margin-top: 0;
+		        margin-bottom: 0;
+		    }
+		    & > span {
+		        text-align: center;
+		        padding: 4px 8px;
+		        font-size: var(--txt_topic_size);
+		        line-height: 16px;
+		        color: var(--txt_black);
+		        background: var(--color_primary_light);
+		        border: 1px solid var(--color_primary_light);
+		        transition: background .3s ease, border .3s ease, color .3s ease;
+		    }
+		    &:focus-within {
+		        & > span {
+		            color: var(--txt_white);
+		            background: var(--color_primary);
+		            border-color: var(--color_primary);
+		        }
+		    }
+			}
+			
+			textarea,
+			input[type=text] {
+				font-size: var(--txt_normal_size);
+				padding: 4px;
+			  border: 3px solid var(--color_primary_light);
+			  -webkit-transition: 0.5s;
+			  transition: 0.5s;
+			  outline: none;
+			}
+			
+			textarea:focus,
+			input[type=text]:focus {
+			  border: 3px solid var(--color_primary);
+			}
+			
+    </style>
+    
+    
+    <script>
+      var arrayListCallbackName = []
+    
+      function sendBridge() {
+        const functionName = document.getElementById("txtJSBFunc").value;
+        const functionCallBack = document.getElementById("txtJSBCallBack").value;
+        const message = document.getElementById("txtJSBData").value;
+        
+        if (!functionName) {
+					alert("functionName field is required!");
+					return;
+        }
+        
+        if (functionCallBack) {
+          clearCallback()
+					arrayListCallbackName.push(functionCallBack)
+					
+          window[functionCallBack] = function() {
+            alert('Callback Success !!!')
+            clearCallback()
+          }
+        }
+        
+        if (window.JSBridge) {
+          callNativeFunction(functionName, message)
+        } else {
+          alert("Android interface is not available func: " + functionName + " data: " + message + ".");
+        }
+        
+				document.getElementById("txtJSBFunc").value = "";
+        document.getElementById("txtJSBCallBack").value = "";
+      }
+      
+      function clearJSBridge() {
+				document.getElementById("txtJSBFunc").value = "";
+        document.getElementById("txtJSBCallBack").value = "";
+				
+				clearCallback()
+      }
+      
+      function clearCallback() {
+        if (arrayListCallbackName.length > 0) {
+					arrayListCallbackName.forEach((name) => {
+						delete window[name]
+					})
+        }
+        arrayListCallbackName = []
+      }
+      
+      function testJSBridge() {
+        try {
+					test1234()
+				} catch (error) {
+					console.log('Not found function test1234()')
+				}
+      }
+        
+      function callNativeFunction(functionName, message) {
+        if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
+          window.JSBridge[functionName](message);
+        } else {
+          console.error("Function " + functionName + " not found in JSBridge interface.");
+        }
+      }
+    </script>
+	</head>
+	<body>
+		<div class="box-vertical">
+			<div class="box-center">
+				<h1>Send JavaScript Bridge Message</h1>
+			</div>
+			
+			<div class="box-center">
+				<div class="box-vertical expand">
+					<div class="form-group">
+						<span>*JSBridge function name</span>
+						<input class="form-field" id="txtJSBFunc" type="text" placeholder="Exter function" required>
+					</div>
+					
+					<div class="form-group">
+						<span>Callback function name</span>
+						<input class="form-field" id="txtJSBCallBack" type="text" placeholder="Exter function Callback">
+					</div>
+					
+					<div class="form-group">
+						<span>Data value</span>
+						<textarea class="form-field" id="txtJSBData" name="Text1" cols="40" rows="5" placeholder="Enter value"></textarea>
+					</div>
+					
+					<div class="form-actions">
+						<button class="button button-default" type="button" onclick="clearJSBridge()">clear</button>
+						<button class="button button-default" type="button" onclick="testJSBridge()">Test FunctionName test1234</button>
+						<button class="button button-primary" type="button" onclick="sendBridge()">Send JSBridge</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
