@@ -213,13 +213,12 @@
           showModal("Android interface is not available func: " + functionName + " data: " + message + ".");
         }
         
-				document.getElementById("txtJSBFunc").value = "";
-        document.getElementById("txtJSBCallBack").value = "";
-        
-        const container = document.getElementById("inputFieldsContainer");
-		    while (container.firstChild) {
-		        container.removeChild(container.firstChild);  // ลบ element แรกของ container
-		    }
+				clearJSBridge()
+      }
+
+      function onClickClearJSBridgeButton() {
+        clearJSBridge() 
+        clearCallback()
       }
       
       function clearJSBridge() {
@@ -230,8 +229,6 @@
 		    while (container.firstChild) {
 		        container.removeChild(container.firstChild);  // ลบ element แรกของ container
 		    }
-        
-				clearCallback()
       }
       
       function clearCallback() {
