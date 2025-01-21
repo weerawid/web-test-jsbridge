@@ -225,6 +225,11 @@
       function clearJSBridge() {
 				document.getElementById("txtJSBFunc").value = "";
         document.getElementById("txtJSBCallBack").value = "";
+
+        const container = document.getElementById("inputFieldsContainer");
+		    while (container.firstChild) {
+		        container.removeChild(container.firstChild);  // ลบ element แรกของ container
+		    }
         
 				clearCallback()
       }
