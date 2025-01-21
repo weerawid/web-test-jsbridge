@@ -152,6 +152,35 @@
 			  border: 3px solid var(--color_primary);
 			}
 			
+			.modal {
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+        display: none;
+	    }
+	    .modal-content {
+	        background-color: #fefefe;
+	        margin: 15% auto;
+	        padding: 20px;
+	        border: 1px solid #888;
+	        width: 80%;
+	    }
+	    .close {
+	        color: #aaa;
+	        float: right;
+	        font-size: 28px;
+	        font-weight: bold;
+	    }
+	    .close:hover,
+	    .close:focus {
+	        color: black;
+	        text-decoration: none;
+	        cursor: pointer;
+	    }
     </style>
     
     
@@ -164,7 +193,7 @@
         const message = document.getElementById("txtJSBData").value;
         
         if (!functionName) {
-					alert("functionName field is required!");
+					showModal("functionName field is required!");
 					return;
         }
         
@@ -173,20 +202,15 @@
 					arrayListCallbackName.push(functionCallBack)
 					
           window[functionCallBack] = function() {
-            alert('Callback Success !!!')
+            showModal('Callback Success !!!')
             clearCallback()
           }
         }
         
         if (window.JSBridge) {
           callNativeFunction(functionName, message)
-        } else if (window.webkit && window.webkit.messageHandlers.jsBridge) {
-	  window.webkit.messageHandlers.jsBridge.postMessage({
-	    functionName: functionName,  
-	    data: message
-	  };
-	} else {
-          alert("Android interface is not available func: " + functionName + " data: " + message + ".");
+        } else {
+          showModal("Android interface is not available func: " + functionName + " data: " + message + ".");
         }
         
 				document.getElementById("txtJSBFunc").value = "";
@@ -224,6 +248,15 @@
           console.error("Function " + functionName + " not found in JSBridge interface.");
         }
       }
+      
+      function showModal(message) {
+        document.getElementById('modalText').innerText = message;
+        document.getElementById('myModal').style.display = 'block';
+	    }
+	
+	    function closeModal() {
+	        document.getElementById('myModal').style.display = 'none';
+	    }
     </script>
 	</head>
 	<body>
@@ -255,6 +288,13 @@
 						<button class="button button-primary" type="button" onclick="sendBridge()">Send JSBridge</button>
 					</div>
 				</form>
+			</div>
+		</div>
+		
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				<span class="close" onclick="closeModal()">&times;</span>
+				<p id="modalText">Initial message</p> <!-- This is the element where text will be set -->
 			</div>
 		</div>
 	</body>
