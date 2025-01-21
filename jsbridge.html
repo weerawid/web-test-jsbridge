@@ -185,12 +185,15 @@
     
     
     <script>
-      var arrayListCallbackName = []
+      var arrayListCallbackName = {}
     
       function sendBridge() {
         const functionName = document.getElementById("txtJSBFunc").value;
         const functionCallBack = document.getElementById("txtJSBCallBack").value;
         const message = getDataFromInputs()
+        
+				const regex = /([a-zA-Z0-9_]+)\((.*?)\)/;
+				const match = functionCallBack.match(regex);
         
         if (!functionName) {
 					showModal("functionName field is required!");
@@ -199,50 +202,84 @@
         
         if (functionCallBack) {
           clearCallback()
-					arrayListCallbackName.push(functionCallBack)
+          
+          let params = match[2].split(',').map(param => param.trim());
+          
+					arrayListCallbackName['functionName'] = match[1]
+					arrayListCallbackName['functionParam'] = params
 					
-          window[functionCallBack] = function() {
-            showModal('Callback Success !!!')
-            clearCallback()
-          }
+					switch(params.length) {
+						case 1:
+							window[match[1]] = function(param1) {
+								let param = arrayListCallbackName['functionParam']
+		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1)
+		            clearCallback()
+		          }
+		          break;
+						case 2:
+							window[match[1]] = function(param1, param2) {
+								let param = arrayListCallbackName['functionParam']
+		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1 + ', ' + param[1] + ' is ' + param2)
+		            clearCallback()
+		          }
+		          break;
+						case 3:
+							window[match[1]] = function(param1, param2, param3) {
+		            let param = arrayListCallbackName['functionParam']
+		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1 + ', ' + param[1] + ' is ' + param2 + ', ' + param[2] + ' is ' + param3)
+		            clearCallback()
+		          }
+		          break;
+						case 4:
+							window[match[1]] = function(param1, param2, param3, param4) {
+		            let param = arrayListCallbackName['functionParam']
+		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1 + ', ' + param[1] + ' is ' + param2 + ', ' + param[2] + ' is ' + param3 + ', ' + param[3] + ' is ' + param4)
+		            clearCallback()
+		          }
+		          break
+						default:
+							window[match[1]] = function() {
+		            showModal('Callback Success !!!')
+		            clearCallback()
+		          }
+							break
+					}
         }
         
         if (window.JSBridge) {
           callNativeFunction(functionName, message)
-        } else {
-          showModal("Android interface is not available func: " + functionName + " data: " + message + ".");
+        } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.JSBridge) {
+		        window.webkit.messageHandlers.JSBridge.postMessage({ functionName, message });
+		    } else {
+          showModal("interface is not available func: " + functionName + " data: " + message + ".");
         }
         
-				clearJSBridge()
-      }
-
-      function onClickClearJSBridgeButton() {
-        clearJSBridge() 
-        clearCallback()
-      }
-      
-      function clearJSBridge() {
 				document.getElementById("txtJSBFunc").value = "";
         document.getElementById("txtJSBCallBack").value = "";
-
+        
         const container = document.getElementById("inputFieldsContainer");
 		    while (container.firstChild) {
 		        container.removeChild(container.firstChild);  // ลบ element แรกของ container
 		    }
       }
       
+      function clearJSBridge() {
+				document.getElementById("txtJSBFunc").value = "";
+        document.getElementById("txtJSBCallBack").value = "";
+        
+				clearCallback()
+      }
+      
       function clearCallback() {
-        if (arrayListCallbackName.length > 0) {
-					arrayListCallbackName.forEach((name) => {
-						delete window[name]
-					})
+        if (Object.keys(arrayListCallbackName).length !== 0) {
+					delete window[arrayListCallbackName['functionName']]
         }
-        arrayListCallbackName = []
+        arrayListCallbackName = {}
       }
       
       function testJSBridge() {
         try {
-					test1234()
+					callbackFunc("param1", "param2")
 				} catch (error) {
 					console.log('Not found function test1234()')
 				}
@@ -322,19 +359,19 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.000.005</h1>
+				<h1>Send JavaScript Bridge Message v.000.006</h1>
 			</div>
 			
 			<div class="box-center">
 				<div class="box-vertical expand">
 					<div class="form-group">
 						<span>*JSBridge function name</span>
-						<input class="form-field" id="txtJSBFunc" type="text" placeholder="Exter function" required>
+						<input class="form-field" id="txtJSBFunc" name="txtJSBFunc" type="text" placeholder="Exter function" autocomplete="on" required>
 					</div>
 					
 					<div class="form-group">
 						<span>Callback function name</span>
-						<input class="form-field" id="txtJSBCallBack" type="text" placeholder="Exter function Callback">
+						<input class="form-field" id="txtJSBCallBack" name="txtJSBCallBack type="text" placeholder="callbackFunc(param1, param2)" autocomplete="on" >
 					</div>
 					
 					<div class="form-group">
