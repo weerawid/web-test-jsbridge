@@ -27,4 +27,4 @@ jobs:
 
     - name: Run script (รันไฟล์ที่คุณต้องการ)
       run: |
-        node jsbridge.html
+        node index.html
