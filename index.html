@@ -208,42 +208,16 @@
 					arrayListCallbackName['functionName'] = match[1]
 					arrayListCallbackName['functionParam'] = params
 					
-					switch(params.length) {
-						case 1:
-							window[match[1]] = function(param1) {
-								let param = arrayListCallbackName['functionParam']
-		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1)
-		            clearCallback()
-		          }
-		          break;
-						case 2:
-							window[match[1]] = function(param1, param2) {
-								let param = arrayListCallbackName['functionParam']
-		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1 + ', ' + param[1] + ' is ' + param2)
-		            clearCallback()
-		          }
-		          break;
-						case 3:
-							window[match[1]] = function(param1, param2, param3) {
-		            let param = arrayListCallbackName['functionParam']
-		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1 + ', ' + param[1] + ' is ' + param2 + ', ' + param[2] + ' is ' + param3)
-		            clearCallback()
-		          }
-		          break;
-						case 4:
-							window[match[1]] = function(param1, param2, param3, param4) {
-		            let param = arrayListCallbackName['functionParam']
-		            showModal('Callback Success !!! parameter: ' + param[0] + ' is ' + param1 + ', ' + param[1] + ' is ' + param2 + ', ' + param[2] + ' is ' + param3 + ', ' + param[3] + ' is ' + param4)
-		            clearCallback()
-		          }
-		          break
-						default:
-							window[match[1]] = function() {
-		            showModal('Callback Success !!!')
-		            clearCallback()
-		          }
-							break
-					}
+					window[match[1]] = function(...params) {
+					  let paramNames = arrayListCallbackName['functionParam'] || [];
+					  
+					  const message = params.map((param, index) => 
+					    `${paramNames[index] || `param${index + 1}`}: ${param}`
+					  ).join(', ');
+					
+					  showModal(`Callback Success !!! ${message}`);  
+					  clearCallback();
+					};
         }
         
         if (window.JSBridge) {
@@ -295,23 +269,7 @@
         
       function callNativeFunction(functionName, message) {
         if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
-          switch(message.length) {
-            case 1:
-							window.JSBridge[functionName](message[0].value);
-							break;
-						case 2:
-							window.JSBridge[functionName](message[0].value, message[1].value);
-							break;
-						case 3:
-							window.JSBridge[functionName](message[0].value, message[1].value, message[2].value);
-							break;
-						case 4:
-							window.JSBridge[functionName](message[0].value, message[1].value, message[2].value, message[3].value);
-							break;
-            default:
-							window.JSBridge[functionName]();
-              break;
-          }
+          window.JSBridge[functionName](...message.map(m => m.value));
         } else {
           console.error("Function " + functionName + " not found in JSBridge interface.");
         }
@@ -335,8 +293,8 @@
             newDiv.style.marginRight = "16px";
 
 
-			const inputName = document.createElement("input");
-			inputName.name = 'paramName'
+						const inputName = document.createElement("input");
+						inputName.name = 'paramName'
             inputName.type = "text";
             inputName.placeholder = "Param";
             inputName.style.flex = 0.2;
@@ -386,7 +344,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.000.008</h1>
+				<h1>Send JavaScript Bridge Message v.000.009</h1>
 			</div>
 			
 			<div class="box-center">
