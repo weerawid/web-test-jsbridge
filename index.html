@@ -3,7 +3,7 @@
 	<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webview for Javascript Bridge</title>
+    <title>Webview for test javascript bridge</title>
     
     <style>
       :root {
@@ -247,11 +247,19 @@
         }
         
         if (window.JSBridge) {
-          callNativeFunction(functionName, message)
-        } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.JSBridge) {
-		        window.webkit.messageHandlers.JSBridge.postMessage({ functionName, message });
+          callNativeFunction(functionName, message);
+        } else if (window.webkit) {
+          var iosFunction = { name: functionName };
+          message.forEach((i) => {
+            iosFunction[i.key] = i.value
+          })
+		      window.webkit.messageHandlers.observer.postMessage(iosFunction);
 		    } else {
-          showModal("interface is not available func: " + functionName + " data: " + message + ".");
+					var value = { name: functionName };
+          message.forEach((i) => {
+            value[i.key] = i.value
+          })
+          showModal("interface is not available func: " + functionName + " data: " +  JSON.stringify(value) + ".");
         }
         
 				document.getElementById("txtJSBFunc").value = "";
@@ -259,7 +267,7 @@
         
         const container = document.getElementById("inputFieldsContainer");
 		    while (container.firstChild) {
-		        container.removeChild(container.firstChild);  // ลบ element แรกของ container
+		      container.removeChild(container.firstChild);  // ลบ element แรกของ container
 		    }
       }
       
@@ -289,16 +297,16 @@
         if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
           switch(message.length) {
             case 1:
-							window.JSBridge[functionName](message[0]);
+							window.JSBridge[functionName](message[0].value);
 							break;
 						case 2:
-							window.JSBridge[functionName](message[0], message[1]);
+							window.JSBridge[functionName](message[0].value, message[1].value);
 							break;
 						case 3:
-							window.JSBridge[functionName](message[0], message[1], message[2]);
+							window.JSBridge[functionName](message[0].value, message[1].value, message[2].value);
 							break;
 						case 4:
-							window.JSBridge[functionName](message[0], message[1], message[2], message[3]);
+							window.JSBridge[functionName](message[0].value, message[1].value, message[2].value, message[3].value);
 							break;
             default:
 							window.JSBridge[functionName]();
@@ -326,40 +334,59 @@
             newDiv.style.marginLeft = "16px";
             newDiv.style.marginRight = "16px";
 
-            const newInput = document.createElement("input");
-            newInput.type = "text";
-            newInput.placeholder = "Enter value";
-            newInput.style.flex = 0.8;
+
+			const inputName = document.createElement("input");
+			inputName.name = 'paramName'
+            inputName.type = "text";
+            inputName.placeholder = "Param";
+            inputName.style.flex = 0.2;
+            
+            const inputValue = document.createElement("input");
+            inputValue.name = 'paramValue'
+            inputValue.type = "text";
+            inputValue.placeholder = "Value";
+            inputValue.style.flex = 0.6;
             
             const removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             removeButton.classList.add("remove-button");
             removeButton.style.marginLeft = "8px";
+            removeButton.style.flex = 0.1;
             removeButton.onclick = function() {
                 newDiv.remove(); 
             };
-            newDiv.appendChild(newInput);
+            
+            newDiv.appendChild(inputName);
+            newDiv.appendChild(inputValue);
             newDiv.appendChild(removeButton);
             document.getElementById("inputFieldsContainer").appendChild(newDiv);
         }
         
         function getDataFromInputs() {
-				    const inputContainer = document.getElementById("inputFieldsContainer");
-				    const inputs = inputContainer.getElementsByTagName("input");
-				    const inputValues = [];
-				
-				    for (let input of inputs) {
-				        inputValues.push(input.value);
-				    }
-				
-				    return inputValues;
+			    const inputContainer = document.getElementById("inputFieldsContainer");
+			    const paramNames = inputContainer.querySelectorAll('[name="paramName"]');
+			    const paramValues = inputContainer.querySelectorAll('[name="paramValue"]');
+			    			
+			    if (paramNames.length !== paramValues.length) {
+		        console.error('The number of paramNames and paramValues do not match.');
+		        return;
+			    }
+			    
+			    const keyValuePairs = Array.from(paramNames).map((paramName, index) => {
+		        return {
+	            key: paramName.value,       
+	            value: paramValues[index].value 
+		        };
+			    });
+			
+			    return keyValuePairs;
 				}
     </script>
 	</head>
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.000.007</h1>
+				<h1>Send JavaScript Bridge Message v.000.008</h1>
 			</div>
 			
 			<div class="box-center">
