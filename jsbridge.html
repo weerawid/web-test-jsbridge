@@ -244,7 +244,11 @@
       function callNativeFunction(functionName, message) {
         try {
           if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
-            window.JSBridge[functionName](message);
+            if (message == '') {
+              window.JSBridge[functionName]();
+            } else {
+              window.JSBridge[functionName](message);
+            }
           } else {
             console.error("Function " + functionName + " not found in JSBridge interface.");
           }
