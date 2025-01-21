@@ -180,7 +180,12 @@
         
         if (window.JSBridge) {
           callNativeFunction(functionName, message)
-        } else {
+        } else if (window.webkit && window.webkit.messageHandlers.jsBridge) {
+	  window.webkit.messageHandlers.jsBridge.postMessage({
+	    functionName: functionName,  
+	    data: message
+	  };
+	} else {
           alert("Android interface is not available func: " + functionName + " data: " + message + ".");
         }
         
