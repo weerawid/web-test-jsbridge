@@ -26,6 +26,12 @@
         gap: 10px;
       }
       
+      .box-horizontal {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+      }
+      
       .box-center {
         display: flex;
         align-items: center;
@@ -137,6 +143,15 @@
 		    }
 			}
 			
+			.box-formfield {
+				font-size: var(--txt_normal_size);
+				padding: 4px;
+			  border: 3px solid var(--color_primary_light);
+			  -webkit-transition: 0.5s;
+			  transition: 0.5s;
+			  outline: none;
+			}
+			
 			textarea,
 			input[type=text] {
 				font-size: var(--txt_normal_size);
@@ -234,23 +249,597 @@
     </script>
     
     <script>
-    
-      function openWebview() {
-        sendBridge('openWebview', [{ key: "webUrl", value: "https://www.google.com" }])
+      function getCameraImage() {
+        sendBridge('getCameraImage', [])
+        if (window.bridge) {
+	        window.bridge.getCameraImageCallback = (base64Image) => {  showModal(`getCameraImageCallback: ${base64Image}`) };
+			    window.bridge.getCameraImageCallbackError = (errorCode, errorDescription) => {  showModal(`getCameraImageCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
       }
       
+      function getGalleryImage() {
+				sendBridge('getGalleryImage', [])
+				if (window.bridge) {
+					window.bridge.getGalleryImageCallback = (base64Image) => {  showModal(`getGalleryImageCallback: ${base64Image}`) };
+			    window.bridge.getGalleryImageCallbackError = (errorCode, errorDescription) => {  showModal(`getGalleryImageCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+    
+      function saveImageToGallery() {
+				let imgElement = new Image();
+				imgElement.crossOrigin = "Anonymous"; 
+				imgElement.src = document.querySelector('input[name=saveImageToGalleryRadio]:checked').parentElement.querySelector('img').src; 
+				
+				imgElement.onload = function() {
+				  let base64 = getBase64Image(imgElement);
+				  sendBridge('saveImageToGallery', [{
+						key:"base64Str", 
+						value: base64
+					}]
+				)};
+				if (window.bridge) {
+					window.bridge.saveImageToGalleryCallback = (data) => {  showModal(`saveImageToGalleryCallback: ${data}`) };
+			    window.bridge.saveImageToGalleryCallbackError = (errorCode, errorDescription) => {  showModal(`saveImageToGalleryCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+			}
+     
+      function openPayment() {
+        var txnRefId = document.getElementById("openPaymenttxnRefId").value
+				sendBridge('openPayment', [{key:"txnRefId", value:txnRefId}])
+				if (window.bridge) {
+					window.bridge.openPaymentCallbackError = (errorCode, errorDescription) => {  showModal(`openPaymentCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+			function openWebview() {
+				var webUrl = document.getElementById('openWebviewwebUrl').value
+				var suggestWebLink = getDatalistValues('weblink')
+				
+				if (isValueInDatalist(suggestWebLink, webUrl)) {
+					suggestWebLink.push(webUrl)
+					sessionStorage.setItem('weblink', JSON.stringify(suggestWebLink))
+					updateDatalist('weblink', suggestWebLink)
+				}
+				
+        sendBridge('openWebview', [{ key: "webUrl", value: webUrl }])
+        if (window.bridge) {
+          window.bridge.openWebviewCallbackError = (errorCode, errorDescription) => {  showModal(`openWebviewCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+      function closeWebview() {
+				sendBridge('closeWebview', [])
+      }
+      
+      function openExternalBrowser() {
+				var webUrl = document.getElementById('openExternalBrowserwebUrl').value
+				var suggestWebLink = getDatalistValues('weblink')
+				
+				if (isValueInDatalist(suggestWebLink, webUrl)) {
+					suggestWebLink.push(webUrl)
+					sessionStorage.setItem('weblink', JSON.stringify(suggestWebLink))
+					updateDatalist('weblink', suggestWebLink)
+				}
+				sendBridge('openExternalBrowser', [{key:"webUrl", value:webUrl }])
+				if (window.bridge) {
+					window.bridge.openExternalBrowserCallbackError = (errorCode, errorDescription) => {  showModal(`openExternalBrowserCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+			function openDeeplink() {
+				var deepUrl = document.getElementById('openDeepLinkdeeplink').value
+				var suggestDeepLink = getDatalistValues('deeplink')
+				
+				if (isValueInDatalist(suggestDeepLink, deepUrl)) {
+					suggestDeepLink.push(deepUrl)
+					sessionStorage.setItem('deeplink', JSON.stringify(suggestDeepLink))
+					updateDatalist('deeplink', suggestDeepLink)
+				}
+			
+				sendBridge('openDeeplink', [{key:"deeplink", value:deepUrl }])
+				if (window.bridge) {
+					window.bridge.openDeepLinkCallbackError = (errorCode, errorDescription) => {  showModal(`openDeepLinkCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+      function openInternalDeepLink() {
+				var deepUrl = document.getElementById('openInternalDeepLinkdeeplink').value
+				var suggestDeepLink = getDatalistValues('deeplink')
+				
+				if (isValueInDatalist(suggestDeepLink, deepUrl)) {
+					suggestDeepLink.push(deepUrl)
+					sessionStorage.setItem('deeplink', JSON.stringify(suggestDeepLink))
+					updateDatalist('deeplink', suggestDeepLink)
+				}
+				sendBridge('openInternalDeepLink', [{key:"deeplink", value:deepUrl}])
+				window.bridge.openInternalDeepLinkCallbackError = (errorCode, errorDescription) => {  showModal(`openInternalDeepLinkCallbackError: ${errorCode}, ${errorDescription}`) };
+      }
+      
+      function openMicrosite() {
+        var webUrl = document.getElementById('openMicrositeweburl').value
+        var title = document.getElementById('openMicrositetitle').value
+        var providerName = document.getElementById('openMicrositeprovidername').value
+				sendBridge('openMicrosite', [
+					{key:"webUrl", value:webUrl},
+					{key:"title", value:title},
+					{key:"providerName", value:providerName},
+				])
+				
+				sessionStorage.setItem('openMicrositeweburl', webUrl)
+				sessionStorage.setItem('openMicrositetitle', title)
+				sessionStorage.setItem('openMicrositeprovidername', providerName)
+				if (window.bridge) {
+					window.bridge.openMicrositeCallback = (result) => {  showModal(`openMicrositeCallback: ${result}`) };
+		      window.bridge.openMicrositeCallbackError = (errorCode, errorDescription) => {  showModal(`openMicrositeCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+      function closeMicrositeWithResult() {
+				var result = document.getElementById('closeMicrositeWithResultresult').value
+				sendBridge('closeMicrositeWithResult', [{key:"result", value:result}])
+			}
+      
+      function openMiniApp() {
+        var uuid = document.getElementById('openMiniAppminiAppUUID').value
+        var destination = document.getElementById('openMiniAppminiAppDestination').value
+        var param = document.getElementById('openMiniAppminiAppParams').value
+      
+				sendBridge('internalPartnerPinVerify', [
+					{key:"miniAppUUID", value:uuid},
+					{key:"miniAppDestination", value:destination},
+					{key:"miniAppParams", value:param}
+				])
+				if (window.bridge) {
+					window.bridge.openMiniAppCallback = (result) => {  showModal(`internalPartnerInitAuthCallbacl: ${result}`) };
+					window.bridge.openMiniAppCallbackError = (errorCode, errorDescription) => {  showModal(`openMiniAppCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+			}
+			
+			function closeMiniAppWithResult() {
+				var result = document.getElementById('closeMiniAppWithResultresult').value
+				sendBridge('closeMiniAppWithResult', [{key:"result", value:result}])
+			}
+			
+			function shareText() {
+				var shareText = document.getElementById('shareTextshareText').value
+				sendBridge('shareText', [{key:"shareText", value:shareText}])
+			}
+			
+			function internalPartnerInitAuth() {
+				var requiredScope = document.querySelector('input[name=internalPartnerInitAuthRadio]:checked').value == 'True'
+        sendBridge('internalPartnerInitAuth', [
+					{key:"requirePinScope", value:requiredScope}
+        ])
+				if (window.bridge) {
+					window.bridge.internalPartnerInitAuthCallback = (authorizationCode) => {  showModal(`internalPartnerInitAuthCallbacl: ${authorizationCode}`) };
+			    window.bridge.internalPartnerInitAuthCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerInitAuthCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+      function internalPartnerPinVerify() {
+				var partnerReqId = document.getElementById('internalPartnerPinVerifypartnerReqId').value
+        sendBridge('internalPartnerPinVerify', [{key:"partnerReqId", value:partnerReqId}])
+        if (window.bridge) {
+					window.bridge.internalPartnerPinVerifyCallback = (pinVerRefId) => {  showModal(`internalPartnerPinVerifyCallback: ${pinVerRefId}`) };
+			    window.bridge.internalPartnerPinVerifyCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerPinVerifyCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+			function internalPartnerGATagging() {
+				var ga = document.getElementById('internalPartnerGATaggingga').value.replace(/\n/g, '')
+				sendBridge('internalPartnerGATagging', [{key:"ga", value:ga}])
+        
+        if (window.bridge) {
+          window.bridge.internalPartnerGATaggingCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerGATaggingCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+			
+			function internalPartnerAppsFlyerTagging() {
+
+				var appsFlyer = document.getElementById('internalPartnerAppsFlyerTaggingappsFlyer').value.replace(/\n/g, '')
+				sendBridge('internalPartnerAppsFlyerTagging', [{key:"appsFlyer", value:appsFlyer}])
+				if (window.bridge) {
+					window.bridge.internalPartnerAppsFlyerTaggingCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerAppsFlyerTaggingCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+      function shareImage() {
+				let imgElement = new Image();
+				imgElement.crossOrigin = "Anonymous"; 
+				imgElement.src = document.querySelector('input[name=saveImageToGalleryRadio]:checked').parentElement.querySelector('img').src; 
+				
+				imgElement.onload = function() {
+				  let base64 = getBase64Image(imgElement);
+				  sendBridge('shareImage', [{
+						key:"base64Str", 
+						value: base64
+					}])
+				};
+      }
+      
+			function openEmailSetting() {
+				sendBridge('openEmailSetting', [])
+      }
+      
+      function openHideUnHideAccount() {
+				sendBridge('openHideUnHideAccount', [])
+				if (window.bridge) {
+	        window.bridge.openHideUnHideAccountCallback = (pinVerRefId) => {  showModal(`openHideUnHideAccountCallback: `) };
+			    window.bridge.openHideUnHideAccountCallbackError = (errorCode, errorDescription) => {  showModal(`openHideUnHideAccountCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+      }
+      
+      function customJSBridge() {
+        var jsFunction = document.getElementById('customJSBFunc').value
+        sendBridge(jsFunction, getDataFromInputs())
+      }
+    </script>
+    
+    <script>
+    
+			function getBase64Image(img) {
+				if (!img || !img.complete || img.naturalWidth === 0) {
+			    console.error("Invalid or broken image");
+			    return null; // คืนค่า null ถ้า img เป็น undefined หรือไม่สามารถโหลดภาพได้
+			  }
+			
+			  var canvas = document.createElement("canvas");
+			  canvas.width = img.width;
+			  canvas.height = img.height;
+			  var ctx = canvas.getContext("2d");
+			  ctx.drawImage(img, 0, 0);
+			  var dataURL = canvas.toDataURL("image/png");
+			  return dataURL.replace(/^data:image\/?[A-z]*;base64,/).replace("undefined", "");
+			}
+			
+			function updateDatalist(datalistId, list) {
+	      var suggestions = document.getElementById(datalistId);
+				suggestions.innerHTML = '';
+	      list.forEach((value)=>{
+	        var option = document.createElement('option');
+	        option.value = value;
+	        suggestions.appendChild(option);
+	      })
+	    }
+	    
+	    function getDatalistValues(datalistId) {
+	      const datalist = document.getElementById(datalistId);
+	      const options = Array.from(datalist.options).map(option => option.value);
+	      return options
+	    }
+	
+	    function isValueInDatalist(list, value) {
+			  return !list.includes(value); 
+			}
+			
+			window.onload = function() {
+	      onRefresh()
+	    }
+	    
+	    function onRefresh() {
+				var savedWebLink = JSON.parse(sessionStorage.getItem('weblink')) || [];
+	      if (savedWebLink.length === 0) {
+					savedWebLink.push("https://www.google.com/");
+					savedWebLink.push("https://www.youtube.com/");
+					savedWebLink.push("https://www.instagram.com/");
+					savedWebLink.push("https://x.com/?lang=en&mx=2");
+	      }
+	      updateDatalist('weblink', savedWebLink)
+	      
+	      var savedDeeplink = JSON.parse(sessionStorage.getItem('deeplink')) || [];
+	      if (savedDeeplink.length === 0) {
+					savedDeeplink.push("ktbnext://next.co.th/missionbase");
+					savedDeeplink.push("ktbnext://next.co.th/ktc/productshelf");
+					savedDeeplink.push("ktbnext://next.co.th/loan/landing");
+	      }
+	      updateDatalist('deeplink', savedDeeplink)
+	      
+	      
+			  document.getElementById('openMicrositeweburl').value = sessionStorage.getItem('openMicrositeweburl') || "https://weerawid.github.io/web-test-jsbridge/"
+	      document.getElementById('openMicrositetitle').value = sessionStorage.getItem('openMicrositetitle')
+	      document.getElementById('openMicrositeprovidername').value = sessionStorage.getItem('openMicrositeproviderName')
+	      
+	      document.getElementById('internalPartnerGATaggingga').value = '' +
+						`{\n` +
+						`  "event": {\n` +
+						`    "action": "click",\n` +
+						`    "category": "ProfileCreated",\n` +
+						`    "label": null\n` +
+						`  },\n` +
+						`  "customDimemsions": [\n` +
+						`    {\n` +
+						`      "key": "xxx",\n` +
+						`      "value": "yyy"\n` +
+						`    }\n` +
+						`  ],\n` +
+						`  "firebaseParam": [\n` +
+						`    {\n` +
+						`      "key": "aaa",\n` +
+						`      "value": "bbb"\n` +
+						`    }\n` +
+						`  ]\n` +
+						`}`
+	      
+				document.getElementById('internalPartnerAppsFlyerTaggingappsFlyer').value = '' +
+			      `{\n` +
+						`  "event": {\n` +
+						`    "label": "xxx"\n` +
+						`  },\n` +
+						`  "appsFlyerParam": [\n` +
+						`    {\n` +
+						`      "key": "aaa",\n` +
+						`      "value": "bbb"\n` +
+						`    }\n` +
+						`  ]\n` +
+						`}`
+	    }
+	    
+	    function clearSession() {
+	      sessionStorage.clear()
+	      onRefresh()
+	    }
+	    
+	    function addInputField() {
+				const newDiv = document.createElement("div");
+        newDiv.classList.add("input-container");
+        newDiv.style.width = "100%"; 
+        newDiv.style.display = "flex";
+        newDiv.style.marginLeft = "4px";
+        newDiv.style.marginRight = "4px";
+
+				const inputName = document.createElement("input");
+				inputName.name = 'paramName'
+        inputName.type = "text";
+        inputName.placeholder = "Param";
+            
+        const inputValue = document.createElement("input");
+        inputValue.name = 'paramValue'
+        inputValue.type = "text";
+        inputValue.placeholder = "Value";
+        inputValue.style.flex = 0.8;
+            
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.classList.add("remove-button");
+        removeButton.style.marginLeft = "4px";
+        removeButton.style.flex = 0.05;
+        removeButton.onclick = function() {
+            newDiv.remove(); 
+        };
+            
+        newDiv.appendChild(inputName);
+        newDiv.appendChild(inputValue);
+        newDiv.appendChild(removeButton);
+        document.getElementById("inputFieldsContainer").appendChild(newDiv);
+      }
+        
+      function getDataFromInputs() {
+			  const inputContainer = document.getElementById("inputFieldsContainer");
+			  const paramNames = inputContainer.querySelectorAll('[name="paramName"]');
+			  const paramValues = inputContainer.querySelectorAll('[name="paramValue"]');
+			    			
+		    if (paramNames.length !== paramValues.length) {
+	        console.error('The number of paramNames and paramValues do not match.');
+	        return;
+		    }
+			    
+		    const keyValuePairs = Array.from(paramNames).map((paramName, index) => {
+	        return {
+            key: paramName.value,       
+            value: paramValues[index].value 
+	        };
+		    });
+		
+		    return keyValuePairs;
+			}
     </script>
 	</head>
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.000.010</h1>
+				<h1>Send JavaScript Bridge Message v.001.000</h1>
 			</div>
+			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
-			<div class="box-center">
-				<button class="button button-primary" type="button" onclick="openWebview()">openWebview</button>
+			<div class="box-vertical" style="margin-top: 16px;">
+				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="getCameraImage()">getCameraImage</button></div>
+				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="getGalleryImage()">getGalleryImage</button></div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="saveImageToGallery()">saveImageToGallery</button>
+					<div>
+						<label>
+							<input type="radio" name="saveImageToGalleryRadio" value="small" checked>
+							<img src="https://img.icons8.com/?size=24&id=19318&format=png&color=000000" alt="Option 1">
+						</label>
+						<label>
+							<input type="radio" name="saveImageToGalleryRadio" value="small">
+							<img src="https://img.icons8.com/?size=24&id=118960&format=png&color=000000" alt="Option 2">
+						</label>
+						<label>
+							<input type="radio" name="saveImageToGalleryRadio" value="small">
+							<img src="https://img.icons8.com/?size=24&id=119026&format=png&color=000000" alt="Option 2">
+						</label>
+						<label>
+							<input type="radio" name="saveImageToGalleryRadio" value="small">
+							<img src="https://img.icons8.com/?size=24&id=01GWmP9aUoPj&format=png&color=000000" alt="Option 2">
+						</label>
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openPayment()">openPayment</button>
+					<div class="form-group">
+						<span>txnRefId</span>
+						<input class="form-field" id="openPaymenttxnRefId" name="txtJSBFunc" type="text" placeholder="txnRefId">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openWebview()">openWebview</button>
+					<div class="form-group">
+						<span>webUrl</span>
+						<input list="weblink" class="form-field" id="openWebviewwebUrl" name="txtJSBFunc" type="text" placeholder="webUrl">
+					</div>
+				</div>
+				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="closeWebview()">closeWebview</button></div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openExternalBrowser()">openExternalBrowser</button>
+					<div class="form-group">
+						<span>webUrl</span>
+						<input list="weblink" class="form-field" id="openExternalBrowserwebUrl" name="txtJSBFunc" type="text" placeholder="webUrl">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openDeepLink()">openDeepLink</button>
+					<div class="form-group">
+						<span>deeplink</span>
+						<input list="deeplink" class="form-field" id="openDeepLinkdeeplink" name="txtJSBFunc" type="text" placeholder="deeplink">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openInternalDeepLink()">openInternalDeepLink</button>
+					<div class="form-group">
+						<span>deeplink</span>
+						<input list="deeplink" class="form-field" id="openInternalDeepLinkdeeplink" name="txtJSBFunc" type="text" placeholder="deeplink">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openMicrosite()">openMicrosite</button>
+					<div class="box-vertical" style="width: 100%;">
+						<div class="form-group">
+							<span>webUrl</span>
+							<input class="form-field" id="openMicrositeweburl" name="txtJSBFunc" type="text" placeholder="webUrl">
+						</div>
+						<div class="form-group">
+							<span>title</span>
+							<input class="form-field" id="openMicrositetitle" name="txtJSBFunc" type="text" placeholder="title">
+						</div>
+						<div class="form-group">
+							<span>providerName</span>
+							<input class="form-field" id="openMicrositeprovidername" name="txtJSBFunc" type="text" placeholder="providerName">
+						</div>
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="closeMicrositeWithResult()">closeMicrositeWithResult</button>
+					<div class="form-group">
+						<span>result</span>
+						<input class="form-field" id="closeMicrositeWithResultresult" name="txtJSBFunc" type="text" placeholder="result">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="openMiniApp()">openMiniApp</button>
+					<div class="box-vertical" style="width: 100%;">
+						<div class="form-group">
+							<span>miniAppUUID</span>
+							<input class="form-field" id="openMiniAppminiAppUUID" name="txtJSBFunc" type="text" placeholder="miniAppUUID">
+						</div>
+						<div class="form-group">
+							<span>miniAppDestination</span>
+							<input class="form-field" id="openMiniAppminiAppDestination" name="txtJSBFunc" type="text" placeholder="miniAppDestination">
+						</div>
+						<div class="form-group">
+							<span>miniAppParams</span>
+							<input class="form-field" id="openMiniAppminiAppParams" name="txtJSBFunc" type="text" placeholder="miniAppParams">
+						</div>
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="closeMiniAppWithResult()">closeMiniAppWithResult</button>
+					<div class="form-group">
+						<span>result</span>
+						<input class="form-field" id="closeMiniAppWithResultresult" name="txtJSBFunc" type="text" placeholder="result">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="shareText()">shareText</button>
+					<div class="form-group">
+						<span>shareText</span>
+						<input class="form-field" id="shareTextshareText" name="txtJSBFunc" type="text" placeholder="shareText">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="internalPartnerInitAuth()">internalPartnerInitAuth</button>
+					
+					<div class="form-group">
+						<span>requirePinScope</span>
+						<div class="box-center box-formfield form-field">
+							<label>
+								<input type="radio" name="internalPartnerInitAuthRadio" value="true" checked>
+								<span>True</span>
+							</label>
+							<label>
+								<input type="radio" name="internalPartnerInitAuthRadio" value="false">
+								<span>False</span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="internalPartnerPinVerify()">internalPartnerPinVerify</button>
+					<div class="form-group">
+						<span>partnerReqId</span>
+						<input class="form-field" id="internalPartnerPinVerifypartnerReqId" name="txtJSBFunc" type="text" placeholder="partnerReqId">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="internalPartnerGATagging()">internalPartnerGATagging</button>
+					<div class="form-group">
+						<span>ga</span>
+						<textarea class="form-field" id="internalPartnerGATaggingga" rows="20" cols="50"></textarea>
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="internalPartnerAppsFlyerTagging()">internalPartnerAppsFlyerTagging</button>
+					<div class="form-group">
+						<span>appsFlyer</span>
+						<textarea class="form-field" id="internalPartnerAppsFlyerTaggingappsFlyer" rows="20" cols="50"></textarea>
+					</div>
+				</div>
+				
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="shareImage()">shareImage</button>
+					<div>
+						<label>
+							<input type="radio" name="shareImageRadio" value="small" checked>
+							<img src="https://img.icons8.com/?size=24&id=19318&format=png&color=000000" alt="Option 1">
+						</label>
+						<label>
+							<input type="radio" name="shareImageRadio" value="small">
+							<img src="https://img.icons8.com/?size=24&id=118960&format=png&color=000000" alt="Option 2">
+						</label>
+						<label>
+							<input type="radio" name="shareImageRadio" value="small">
+							<img src="https://img.icons8.com/?size=24&id=119026&format=png&color=000000" alt="Option 2">
+						</label>
+						<label>
+							<input type="radio" name="shareImageRadio" value="small">
+							<img src="https://img.icons8.com/?size=24&id=01GWmP9aUoPj&format=png&color=000000" alt="Option 2">
+						</label>
+					</div>
+				</div>
+				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="openEmailSetting()">openEmailSetting</button></div>
+				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="openHideUnHideAccount()">openHideUnHideAccount</button></div>
+				
+				<div class="box-vertical">
+					<div class="form-group">
+						<span>function name</span>
+						<input class="form-field" id="customJSBFunc" name="customJSBFunc" type="text" placeholder="function" autocomplete="on" required>
+					</div>
+					
+					<div class="form-group box-horizontal">
+						<span>Data value</span>
+						<div class="box-vertical form-field expand" id="inputFieldsContainer">
+							
+						</div>
+						<button class="button button-primary" onclick="addInputField()">Add</button>
+					</div>
+					
+					<button class="button button-primary" type="button" onclick="customJSBridge()">Send JSBridge</button>
+				</div>
 			</div>
 		</div>
+		
+		<datalist id="weblink"></datalist>
+		<datalist id="deeplink"></datalist>
 		
 		<div id="myModal" class="modal">
 			<div class="modal-content">
