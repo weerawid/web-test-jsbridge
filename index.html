@@ -187,38 +187,9 @@
     <script>
       var arrayListCallbackName = {}
     
-      function sendBridge() {
-        const functionName = document.getElementById("txtJSBFunc").value;
-        const functionCallBack = document.getElementById("txtJSBCallBack").value;
-        const message = getDataFromInputs()
-        
-				const regex = /([a-zA-Z0-9_]+)\((.*?)\)/;
-				const match = functionCallBack.match(regex);
-        
-        if (!functionName) {
-					showModal("functionName field is required!");
-					return;
-        }
-        
-        if (functionCallBack) {
-          clearCallback()
-          
-          let params = match[2].split(',').map(param => param.trim());
-          
-					arrayListCallbackName['functionName'] = match[1]
-					arrayListCallbackName['functionParam'] = params
-					
-					window[match[1]] = function(...params) {
-					  let paramNames = arrayListCallbackName['functionParam'] || [];
-					  
-					  const message = params.map((param, index) => 
-					    `${paramNames[index] || `param${index + 1}`}: ${param}`
-					  ).join(', ');
-					
-					  showModal(`Callback Success !!! ${message}`);  
-					  clearCallback();
-					};
-        }
+      function sendBridge(funcName, msg) {
+        const functionName = funcName;
+        const message = msg
         
         if (window.JSBridge) {
           callNativeFunction(functionName, message);
@@ -235,21 +206,6 @@
           })
           showModal("interface is not available func: " + functionName + " data: " +  JSON.stringify(value) + ".");
         }
-        
-				document.getElementById("txtJSBFunc").value = "";
-        document.getElementById("txtJSBCallBack").value = "";
-        
-        const container = document.getElementById("inputFieldsContainer");
-		    while (container.firstChild) {
-		      container.removeChild(container.firstChild);  // ลบ element แรกของ container
-		    }
-      }
-      
-      function clearJSBridge() {
-				document.getElementById("txtJSBFunc").value = "";
-        document.getElementById("txtJSBCallBack").value = "";
-        
-				clearCallback()
       }
       
       function clearCallback() {
@@ -257,14 +213,6 @@
 					delete window[arrayListCallbackName['functionName']]
         }
         arrayListCallbackName = {}
-      }
-      
-      function testJSBridge() {
-        try {
-					callbackFunc("param1", "param2")
-				} catch (error) {
-					console.log('Not found function test1234()')
-				}
       }
         
       function callNativeFunction(functionName, message) {
@@ -283,62 +231,14 @@
 	    function closeModal() {
 	        document.getElementById('myModal').style.display = 'none';
 	    }
-	    
-	    function addInputField() {
-            const newDiv = document.createElement("div");
-            newDiv.classList.add("input-container");
-            newDiv.style.width = "100%"; 
-            newDiv.style.display = "flex";
-            newDiv.style.marginLeft = "16px";
-            newDiv.style.marginRight = "16px";
-
-
-						const inputName = document.createElement("input");
-						inputName.name = 'paramName'
-            inputName.type = "text";
-            inputName.placeholder = "Param";
-            inputName.style.flex = 0.2;
-            
-            const inputValue = document.createElement("input");
-            inputValue.name = 'paramValue'
-            inputValue.type = "text";
-            inputValue.placeholder = "Value";
-            inputValue.style.flex = 0.6;
-            
-            const removeButton = document.createElement("button");
-            removeButton.textContent = "Remove";
-            removeButton.classList.add("remove-button");
-            removeButton.style.marginLeft = "8px";
-            removeButton.style.flex = 0.1;
-            removeButton.onclick = function() {
-                newDiv.remove(); 
-            };
-            
-            newDiv.appendChild(inputName);
-            newDiv.appendChild(inputValue);
-            newDiv.appendChild(removeButton);
-            document.getElementById("inputFieldsContainer").appendChild(newDiv);
-        }
-        
-        function getDataFromInputs() {
-			    const inputContainer = document.getElementById("inputFieldsContainer");
-			    const paramNames = inputContainer.querySelectorAll('[name="paramName"]');
-			    const paramValues = inputContainer.querySelectorAll('[name="paramValue"]');
-			    			
-			    if (paramNames.length !== paramValues.length) {
-		        console.error('The number of paramNames and paramValues do not match.');
-		        return;
-			    }
-			    
-			    const keyValuePairs = Array.from(paramNames).map((paramName, index) => {
-		        return {
-	            key: paramName.value,       
-	            value: paramValues[index].value 
-		        };
-			    });
-			
-			    return keyValuePairs;
-				}
+    </script>
+    
+    <script>
+    
+      function openWebview() {
+        sendBridge('openWebview', [{ key: "webUrl", value: "https://www.google.com" }])
+      }
+      
     </script>
 	</head>
 	<body>
@@ -348,31 +248,7 @@
 			</div>
 			
 			<div class="box-center">
-				<div class="box-vertical expand">
-					<div class="form-group">
-						<span>*JSBridge function name</span>
-						<input class="form-field" id="txtJSBFunc" name="txtJSBFunc" type="text" placeholder="Exter function" autocomplete="on" required>
-					</div>
-					
-					<div class="form-group">
-						<span>Callback function name</span>
-						<input class="form-field" id="txtJSBCallBack" name="txtJSBCallBack type="text" placeholder="callbackFunc(param1, param2)" autocomplete="on" >
-					</div>
-					
-					<div class="form-group">
-						<span>Data value</span>
-						<div class="box-vertical form-field expand" id="inputFieldsContainer">
-							
-						</div>
-						<button class="button button-primary" onclick="addInputField()">Add Input Field</button>
-					</div>
-					
-					<div class="form-actions">
-						<button class="button button-default" type="button" onclick="clearJSBridge()">clear</button>
-						<!-- <button class="button button-default" type="button" onclick="testJSBridge()">Test FunctionName test1234</button> -->
-						<button class="button button-primary" type="button" onclick="sendBridge()">Send JSBridge</button>
-					</div>
-				</form>
+				<button class="button button-primary" type="button" onclick="sendBridge()">Send JSBridge</button>
 			</div>
 		</div>
 		
