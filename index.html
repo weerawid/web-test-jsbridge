@@ -336,7 +336,7 @@
 					updateDatalist('deeplink', suggestDeepLink)
 				}
 			
-				sendBridge('openDeeplink', [{key:"deeplink", value:deepUrl }])
+				sendBridge('openDeepLink', [{key:"deeplink", value:deepUrl }])
 				if (window.bridge) {
 					window.bridge.openDeepLinkCallbackError = (errorCode, errorDescription) => {  showModal(`openDeepLinkCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
