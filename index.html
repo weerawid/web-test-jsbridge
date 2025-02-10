@@ -409,6 +409,11 @@
 				sendBridge('shareText', [{key:"text", value:shareText}])
 			}
 			
+			function copyToClipboard() {
+				var clip = document.getElementById('copyToClipboard').value
+				sendBridge('copyToClipboard', [{key:"text", value:clip}])
+			}
+			
 			function internalPartnerInitAuth() {
 				// var requiredScope = document.querySelector('input[name=internalPartnerInitAuthRadio]:checked').value == 'True'
         sendBridge('internalPartnerInitAuth', [
@@ -648,7 +653,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.007</h1>
+				<h1>Send JavaScript Bridge Message v.001.008</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
@@ -765,6 +770,13 @@
 					<div class="form-group">
 						<span>shareText</span>
 						<input class="form-field" id="shareTextshareText" name="txtJSBFunc" type="text" placeholder="shareText">
+					</div>
+				</div>
+				<div class="box-horizontal">
+					<button class="button button-primary" type="button" onclick="copyToClipboard()">copyToClipboard</button>
+					<div class="form-group">
+						<span>text</span>
+						<input class="form-field" id="copyToClipboardText" name="txtJSBFunc" type="text" placeholder="shareText">
 					</div>
 				</div>
 				<div class="box-horizontal">
