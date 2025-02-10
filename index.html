@@ -239,7 +239,7 @@
       }
       
       function showModal(message) {
-        document.getElementById('modalText').innerText = message;
+        document.getElementById('modalText').innerText = message.substring(0, 50);
         document.getElementById('myModal').style.display = 'block';
 	    }
 	
@@ -249,7 +249,6 @@
     </script>
     
     <script>
-      let bridge = {};  
     
       function getCameraImage() {
         sendBridge('getCameraImage', [])
@@ -261,8 +260,8 @@
       
       function getGalleryImage() {
 				sendBridge('getGalleryImage', [])
+				window.bridge.getGalleryImageCallback = (base64Image) => {  showModal(`getGalleryImageCallback: ${base64Image}`) };
 				if (window.bridge) {
-					window.bridge.getGalleryImageCallback = (base64Image) => {  showModal(`getGalleryImageCallback: ${base64Image}`) };
 			    window.bridge.getGalleryImageCallbackError = (errorCode, errorDescription) => {  showModal(`getGalleryImageCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
       }
@@ -524,6 +523,8 @@
 	    }
 	    
 	    function onRefresh() {
+	      window.bridge = {};  
+	    
 				var savedWebLink = JSON.parse(sessionStorage.getItem('weblink')) || [];
 	      if (savedWebLink.length === 0) {
 					savedWebLink.push("https://www.google.com/");
@@ -644,7 +645,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.005</h1>
+				<h1>Send JavaScript Bridge Message v.001.006</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
