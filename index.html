@@ -473,6 +473,11 @@
         var jsFunction = document.getElementById('customJSBFunc').value
         sendBridge(jsFunction, getDataFromInputs())
       }
+      
+      function customCommand() {
+        var jsFunction = document.getElementById('customCommand').value
+        eval(jsFunction)
+      }
     </script>
     
     <script>
@@ -834,6 +839,15 @@
 					</div>
 					
 					<button class="button button-primary" type="button" onclick="customJSBridge()">Send JSBridge</button>
+				</div>
+				
+				<div class="box-vertical">
+					<div class="form-group">
+						<span>eval command</span>
+						<input class="form-field" id="customCommand" name="customCommand" type="text" placeholder="function" autocomplete="on" required>
+					</div>
+					
+					<button class="button button-primary" type="button" onclick="customCommand()">Send Command</button>
 				</div>
 			</div>
 		</div>
