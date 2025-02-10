@@ -410,7 +410,7 @@
 			}
 			
 			function copyToClipboard() {
-				var clip = document.getElementById('copyToClipboard').value
+				var clip = document.getElementById('copyToClipboardText').value
 				sendBridge('copyToClipboard', [{key:"text", value:clip}])
 			}
 			
@@ -653,7 +653,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.008</h1>
+				<h1>Send JavaScript Bridge Message v.001.009</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
@@ -769,14 +769,14 @@
 					<button class="button button-primary" type="button" onclick="shareText()">shareText</button>
 					<div class="form-group">
 						<span>shareText</span>
-						<input class="form-field" id="shareTextshareText" name="txtJSBFunc" type="text" placeholder="shareText">
+						<input class="form-field" id="shareTextshareText" name="txtJSBFunc" type="text" placeholder="text">
 					</div>
 				</div>
 				<div class="box-horizontal">
 					<button class="button button-primary" type="button" onclick="copyToClipboard()">copyToClipboard</button>
 					<div class="form-group">
 						<span>text</span>
-						<input class="form-field" id="copyToClipboardText" name="txtJSBFunc" type="text" placeholder="shareText">
+						<input class="form-field" id="copyToClipboardText" name="txtJSBFunc" type="text" placeholder="text">
 					</div>
 				</div>
 				<div class="box-horizontal">
