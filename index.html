@@ -179,6 +179,8 @@
         height: 100%;
         background-color: rgba(0,0,0,0.4);
         display: none;
+        align-items: center;
+        justify-content: center;
 	    }
 	    .modal-content {
 	        background-color: #fefefe;
@@ -187,6 +189,15 @@
 	        border: 1px solid #888;
 	        width: 80%;
 	    }
+	    
+	    .modal img {
+        width: 200px;
+        height: auto;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+      }
+	    
 	    .close {
 	        color: #aaa;
 	        float: right;
@@ -491,13 +502,15 @@
       }
       
       function customJSBridge() {
-        var jsFunction = document.getElementById('customJSBFunc').value
-        sendBridge(jsFunction, getDataFromInputs())
+      showModal('test')
+        // var jsFunction = document.getElementById('customJSBFunc').value
+        // sendBridge(jsFunction, getDataFromInputs())
       }
       
       function customCommand() {
-        var jsFunction = document.getElementById('customCommand').value
-        eval(jsFunction)
+      showModalImage('iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABoklEQVR42u3ZP0tCURgGcI1qqyXMoWhwc3GTyKHMSRxrE3S8g4s63VUj0aIGR10EKb+AYJSDQ21+APELOLr75/r0WCc4SAhChi+cB377++BVz3mvy8TExMRkLYHLdUgRipOlyZKtKWkeqaJ5UipL3FOJ8mQrlpKgS/KsMvgZvdGUsCGm9EqnywZ3U4FmhA01oxty/1agSBDidnH4iGoHIWZ0oRf4IAjz/jP8iWoEYWZ0PC9wTRDqal4gRRAqNS+QIQiV+dsC1SqQTAou0GrhK50OEAhILaDiOEC9Dng8AgvoGQ6BdBrY3hZYQE+vB0SjQgvoaTYBn09qAZXRCCiXgb09oQUcB6jVAK9XYIFuFwiFBD5CgwFgWcDWlrAv8Xj8/bzv7wv8GW23Ab9f4B9Zvw/EYgKPEo0GYNvA7q7Qw9zODv7/OC3/QiP/Snkk+VIvf62iCoQFLrbOF7dzBamrRX25m9/wT8KhHLmXbamD9EITwoaYqJmCq7wnOKAwJchSbCVHJbqjyhLPVKeK5oFKSpFsTZYsTZzCdGBeOZmYmJisJZ/TUpGmPBzpvwAAAABJRU5ErkJggg==')
+        // var jsFunction = document.getElementById('customCommand').value
+        // eval(jsFunction)
       }
     </script>
     
@@ -665,7 +678,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.017</h1>
+				<h1>Send JavaScript Bridge Message v.001.018</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
