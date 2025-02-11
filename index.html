@@ -243,12 +243,13 @@
       
       function showModal(message) {
         document.getElementById('modalText').innerText = message.substring(0, 50);
+        document.getElementById('modalText').style.display = 'flex'
         document.getElementById('myModal').style.display = 'block';
         document.getElementById('modalImage').style.display = 'none';
 	    }
 	    
 	    function showModalImage(base64) {
-        document.getElementById('modalImage').src = `data:image/*;base64,${base64},`;
+        document.getElementById('modalImage').src = `data:image/*;base64,${base64}`;
         document.getElementById('modalImage').style.display = 'flex'
         document.getElementById('myModal').style.display = 'block';
 				document.getElementById('modalText').style.display = 'none';    
@@ -664,7 +665,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.016</h1>
+				<h1>Send JavaScript Bridge Message v.001.017</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
