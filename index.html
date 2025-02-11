@@ -394,7 +394,7 @@
 					{key:"miniAppParams", value:param}
 				])
 				if (window.bridge) {
-					window.bridge.openMiniAppCallback = (result) => {  showModal(`internalPartnerInitAuthCallbacl: ${result}`) };
+					window.bridge.openMiniAppCallback = (result) => {  showModal(`openMiniAppCallback: ${result}`) };
 					window.bridge.openMiniAppCallbackError = (errorCode, errorDescription) => {  showModal(`openMiniAppCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
 			}
