@@ -245,6 +245,11 @@
         document.getElementById('modalText').innerText = message.substring(0, 50);
         document.getElementById('myModal').style.display = 'block';
 	    }
+	    
+	    function showModalImage(base64) {
+        document.getElementById('modalImage').src = base64;
+        document.getElementById('myModal').style.display = 'block';
+	    }
 	
 	    function closeModal() {
 	        document.getElementById('myModal').style.display = 'none';
@@ -256,14 +261,14 @@
       function getCameraImage() {
         sendBridge('getCameraImage', [])
         if (window.bridge) {
-	        window.bridge.getCameraImageCallback = (base64Image) => {  showModal(`getCameraImageCallback: ${base64Image}`) };
+	        window.bridge.getCameraImageCallback = (base64Image) => {  showModalImage(base64Image) };
 			    window.bridge.getCameraImageCallbackError = (errorCode, errorDescription) => {  showModal(`getCameraImageCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
       }
       
       function getGalleryImage() {
 				sendBridge('getGalleryImage', [])
-				window.bridge.getGalleryImageCallback = (base64Image) => {  showModal(`getGalleryImageCallback: ${base64Image}`) };
+				window.bridge.getGalleryImageCallback = (base64Image) => {  showModalImage(base64Image) };
 				if (window.bridge) {
 			    window.bridge.getGalleryImageCallbackError = (errorCode, errorDescription) => {  showModal(`getGalleryImageCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
@@ -879,7 +884,8 @@
 		<div id="myModal" class="modal">
 			<div class="modal-content">
 				<span class="close" onclick="closeModal()">&times;</span>
-				<p id="modalText">Initial message</p> <!-- This is the element where text will be set -->
+				<p id="modalText">Initial message</p>
+				<img id="modalImage"></img>
 			</div>
 		</div>
 	</body>
