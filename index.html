@@ -455,7 +455,7 @@
       function shareImage() {
 				let imgElement = new Image();
 				imgElement.crossOrigin = "Anonymous"; 
-				imgElement.src = document.querySelector('input[name=saveImageToGalleryRadio]:checked').parentElement.querySelector('img').src; 
+				imgElement.src = document.querySelector('input[name=shareImageRadio]:checked').parentElement.querySelector('img').src; 
 				
 				imgElement.onload = function() {
 				  let base64 = getBase64Image(imgElement);
