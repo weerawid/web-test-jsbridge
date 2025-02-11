@@ -469,7 +469,7 @@
 			function openEmailSetting() {
 				sendBridge('openEmailSetting', [])
 				if (window.bridge) {
-					window.bridge.openEmailSettingCallback = ()
+					window.bridge.openEmailSettingCallback = (email) => {  showModal(`openEmailSettingCallback: ${email}`) };
 				}
       }
       
@@ -656,7 +656,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.011</h1>
+				<h1>Send JavaScript Bridge Message v.001.012</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
