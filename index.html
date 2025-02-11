@@ -248,7 +248,7 @@
 	    }
 	    
 	    function showModalImage(base64) {
-        document.getElementById('modalImage').src = `data:image/png;${base64},`;
+        document.getElementById('modalImage').src = `data:image/*;base64,${base64},`;
         document.getElementById('myModal').style.display = 'block';
 				document.getElementById('modalText').style.display = 'none';    
 	    }
@@ -263,7 +263,7 @@
       function getCameraImage() {
         sendBridge('getCameraImage', [])
         if (window.bridge) {
-	        window.bridge.getCameraImageCallback = (base64Image) => {  showModalImage(base64Image) };
+	        window.bridge.getCameraImageCallback = (base64Image) => {  showModalImage("base64Image") };
 			    window.bridge.getCameraImageCallbackError = (errorCode, errorDescription) => {  showModal(`getCameraImageCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
       }
@@ -663,7 +663,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.014</h1>
+				<h1>Send JavaScript Bridge Message v.001.015</h1>
 			</div>
 			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
 			
