@@ -620,6 +620,15 @@
 	      onRefresh()
 	    }
 	    
+	    function testFunction() {
+	      var A = window.JSBridge['closeWebview']
+	      if (!A) {
+	        showModal('FAILURE')
+	      } else {
+	        showModal('SUCCESS')
+	      }
+	    }
+	    
 	    function addInputField() {
 				const newDiv = document.createElement("div");
         newDiv.classList.add("input-container");
@@ -678,9 +687,12 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.018</h1>
+				<h1>Send JavaScript Bridge Message v.001.020</h1>
 			</div>
-			<div class="box-horizontal"><button class="button button-default" type="button" onclick="clearSession()">ClearSession</button></div>
+			<div class="box-horizontal">
+			<button class="button button-default" type="button" onclick="clearSession()">ClearSession</button>
+			<button class="button button-default" type="button" onclick="testFunction()">Test Function</button>
+			</div>
 			
 			<div class="box-vertical" style="margin-top: 16px;">
 				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="getCameraImage()">getCameraImage</button></div>
