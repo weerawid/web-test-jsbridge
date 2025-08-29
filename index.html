@@ -500,6 +500,21 @@
 			    window.bridge.openHideUnHideAccountCallbackError = (errorCode, errorDescription) => {  showModal(`openHideUnHideAccountCallbackError: ${errorCode}, ${errorDescription}`) };
 				}
       }
+
+			function internalPartnerPinWithFaceScanIfNeeded() {
+				var transactionRefId = document.getElementById('internalPartnerPinWithFaceScanIfNeededtransactionRefId').value
+        var partnerRefId = document.getElementById('internalPartnerPinWithFaceScanIfNeededpartnerRefId').value
+      
+				sendBridge('internalPartnerPinWithFaceScanIfNeeded', [
+					{key:"transactionRefId", value:transactionRefId},
+					{key:"partnerRefId", value:partnerRefId}
+				])
+
+				if (window.bridge) {
+	        window.bridge.internalPartnerPinWithFaceScanIfNeededCallback = (transactionRefId, partnerReqId) => {  showModal(`internalPartnerPinWithFaceScanIfNeededCallback: `) };
+			    window.bridge.internalPartnerPinWithFaceScanIfNeededCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerPinWithFaceScanIfNeededCallbackError: ${errorCode}, ${errorDescription}`) };
+				}
+			}
       
       function customJSBridge() {
       showModal('test')
@@ -687,7 +702,7 @@
 	<body>
 		<div class="box-vertical">
 			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.020</h1>
+				<h1>Send JavaScript Bridge Message v.001.021</h1>
 			</div>
 			<div class="box-horizontal">
 			<button class="button button-default" type="button" onclick="clearSession()">ClearSession</button>
@@ -879,6 +894,19 @@
 				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="openEmailSetting()">openEmailSetting</button></div>
 				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="openHideUnHideAccount()">openHideUnHideAccount</button></div>
 				
+				<div class="box-vertical">
+					<button class="button button-primary" type="button" onclick="internalPartnerPinWithFaceScanIfNeeded()">internalPartnerPinWithFaceScanIfNeeded</button>
+					<div class="form-group">
+						<span>transactionRefId</span>
+						<input class="form-field" id="internalPartnerPinWithFaceScanIfNeededtransactionRefId" name="txtJSBFunc" type="text" placeholder="text">
+					</div>
+
+					<div class="form-group">
+						<span>partnerRefId</span>
+						<input class="form-field" id="internalPartnerPinWithFaceScanIfNeededpartnerRefId" name="txtJSBFunc" type="text" placeholder="text">
+					</div>
+				</div>
+
 				<div class="box-vertical">
 					<div class="form-group">
 						<span>function name</span>
