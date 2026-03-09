@@ -1,951 +1,950 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
+<html lang="th">
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
-
-
-    <title>Webview for test javascript bridge</title>
+    <title>JavaScript Bridge Tester - Modern UI</title>
     
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       :root {
+        --color-primary: #1e88e5;
+        --color-primary-dark: #1565c0;
+        --color-primary-light: #e3f2fd;
+        --color-secondary: #43a047;
+        --color-accent: #fb8c00;
+        --color-danger: #e53935;
+        --color-white: #ffffff;
+        --color-black: #000000;
+        --color-gray-50: #f9fafb;
+        --color-gray-100: #f3f4f6;
+        --color-gray-200: #e5e7eb;
+        --color-gray-300: #d1d5db;
+        --color-gray-400: #9ca3af;
+        --color-gray-500: #6b7280;
+        --color-gray-600: #4b5563;
+        --color-text: #1f2937;
+        --color-text-light: #6b7280;
         
-        --color_primary: #03a2e0;
-        --color_primary_light: #D5E7F2;
-        --color_white: #FFFFFF;
-        --color_black: #000000;
+        --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        --font-mono: 'Courier New', monospace;
         
-        --txt_white: #FFFFFF;
-        --txt_black: #000000;
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
         
-        --txt_topic_size: 12px;
-        --txt_normal_size: 10px;
+        --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.15);
+        
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
+        
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-    
-      .box-vertical {
+
+      body {
+        font-family: var(--font-sans);
+        background: linear-gradient(135deg, var(--color-gray-50) 0%, #f0f7ff 100%);
+        color: var(--color-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: var(--spacing-md);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: var(--spacing-xl);
+        padding: var(--spacing-lg);
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-sm);
+        color: var(--color-primary);
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .header p {
+        color: var(--color-text-light);
+        font-size: 0.95rem;
+      }
+
+      /* Toolbar */
+      .toolbar {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
       }
-      
-      .box-horizontal {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
+
+      /* Grid Layout */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
       }
-      
-      .box-center {
+
+      /* Card */
+      .card {
+        background: var(--color-white);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        border: 1px solid var(--color-gray-100);
+      }
+
+      .card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: var(--spacing-md);
+        color: var(--color-primary);
         display: flex;
         align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .card-icon {
+        font-size: 1.3rem;
+      }
+
+      .card-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      /* Button Styles */
+      .btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
+        gap: var(--spacing-xs);
+        text-decoration: none;
+        white-space: nowrap;
+        user-select: none;
       }
-      
-      .expand {
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: var(--color-primary);
+        color: var(--color-white);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--color-primary-dark);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: var(--color-gray-100);
+        color: var(--color-text);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background: var(--color-gray-200);
+        box-shadow: var(--shadow-md);
+      }
+
+      .btn-small {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+      }
+
+      .btn-full-width {
+        width: 100%;
+      }
+
+      /* Form Group */
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--color-text);
+        font-size: 0.9rem;
+      }
+
+      .form-input,
+      .form-textarea,
+      .form-select {
+        padding: var(--spacing-sm) var(--spacing-md);
+        border: 2px solid var(--color-gray-200);
+        border-radius: var(--radius-md);
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: var(--color-text);
+        transition: var(--transition);
+        background: var(--color-white);
+      }
+
+      .form-input:focus,
+      .form-textarea:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px var(--color-primary-light);
+      }
+
+      .form-textarea {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      /* Form Row - สำหรับวางฟิลด์และ button ติดกัน */
+      .form-row {
+        display: flex;
+        gap: var(--spacing-md);
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .form-row .form-group {
         flex: 1;
+        min-width: 200px;
       }
-      
-      .button {
-				border-radius: 8px;
-			  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
-			  box-sizing: border-box;
-			  cursor: pointer;
-			  display: inline-block;
-			  font-family: "Amazon Ember",sans-serif;
-			  font-size: 13px;
-			  line-height: 29px;
-			  padding: 0 10px 0 11px;
-			  position: relative;
-			  text-align: center;
-			  text-decoration: none;
-			  user-select: none;
-			  -webkit-user-select: none;
-			  touch-action: manipulation;
-			  vertical-align: middle;
+
+      /* Radio & Checkbox */
+      .radio-group,
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
       }
-      
-      .button-primary {
-			  background-color: var(--color_primary) ;
-			  border: 1px solid var(--color_primary_light);
-			  color: var(--txt_white);
-			  &:hover {
-					background-color: var(--color_primary_light);
-					color: var(--txt_black);
-			  }
-			  &:focus {
-				  border-color: #008296;
-				  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
-				  outline: 0;
-				}
-			}
-			
-			.button-default {
-			  background-color: var(--color_white) ;
-			  border: 1px solid var(--color_white);
-			  color: var(--txt_black);
-			  &:hover {
-					background-color: var(--color_primary_light);
-					color: var(--txt_black);
-			  }
-			  &:focus {
-				  border-color: #008296;
-				  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
-				  outline: 0;
-				}
-			}
-			
-			.form-actions {
-		    text-align: center;
-			}
-			
-			.form-group {
-		    position: relative;
-		    display: flex;
-		    width: 100%;
-		    & > span,
-		    .form-field {
-		        white-space: nowrap;
-		        display: block;
-		        &:not(:first-child):not(:last-child) {
-		            border-radius: 0;
-		        }
-		        &:first-child {
-		            border-radius: 6px 0 0 6px;
-		        }
-		        &:last-child {
-		            border-radius: 0 6px 6px 0;
-		        }
-		        &:not(:first-child) {
-		            margin-left: -1px;
-		        }
-		    }
-		    .form-field {
-		        position: relative;
-		        z-index: 1;
-		        flex: 1 1 auto;
-		        width: 1%;
-		        margin-top: 0;
-		        margin-bottom: 0;
-		    }
-		    & > span {
-		        text-align: center;
-		        padding: 4px 8px;
-		        font-size: var(--txt_topic_size);
-		        line-height: 16px;
-		        color: var(--txt_black);
-		        background: var(--color_primary_light);
-		        border: 1px solid var(--color_primary_light);
-		        transition: background .3s ease, border .3s ease, color .3s ease;
-		    }
-		    &:focus-within {
-		        & > span {
-		            color: var(--txt_white);
-		            background: var(--color_primary);
-		            border-color: var(--color_primary);
-		        }
-		    }
-			}
-			
-			.box-formfield {
-				font-size: var(--txt_normal_size);
-				padding: 4px;
-			  border: 3px solid var(--color_primary_light);
-			  -webkit-transition: 0.5s;
-			  transition: 0.5s;
-			  outline: none;
-			}
-			
-			textarea,
-			input[type=text] {
-				font-size: var(--txt_normal_size);
-				padding: 4px;
-			  border: 3px solid var(--color_primary_light);
-			  -webkit-transition: 0.5s;
-			  transition: 0.5s;
-			  outline: none;
-			}
-			
-			textarea:focus,
-			input[type=text]:focus {
-			  border: 3px solid var(--color_primary);
-			}
-			
-			.modal {
+
+      .radio-item,
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        cursor: pointer;
+      }
+
+      .radio-item input[type="radio"],
+      .checkbox-item input[type="checkbox"] {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        accent-color: var(--color-primary);
+      }
+
+      .radio-label,
+      .checkbox-label {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      /* Image Selection */
+      .image-selector {
+        display: flex;
+        gap: var(--spacing-md);
+        flex-wrap: wrap;
+        margin: var(--spacing-md) 0;
+      }
+
+      .image-option {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .image-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .image-option img {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--color-gray-200);
+        border-radius: var(--radius-md);
+        transition: var(--transition);
+        object-fit: contain;
+        padding: var(--spacing-xs);
+      }
+
+      .image-option input[type="radio"]:checked + img {
+        border-color: var(--color-primary);
+        background: var(--color-primary-light);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
         position: fixed;
-        z-index: 1;
+        z-index: 1000;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0,0,0,0.4);
-        display: none;
+        background-color: rgba(0, 0, 0, 0.5);
         align-items: center;
         justify-content: center;
-	    }
-	    .modal-content {
-	        background-color: #fefefe;
-	        margin: 15% auto;
-	        padding: 20px;
-	        border: 1px solid #888;
-	        width: 80%;
-	    }
-	    
-	    .modal img {
-        width: 200px;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background-color: var(--color-white);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-xl);
+        animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+        border-bottom: 1px solid var(--color-gray-200);
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--color-text);
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--color-text-light);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        transition: var(--transition);
+      }
+
+      .modal-close:hover {
+        background: var(--color-gray-100);
+        color: var(--color-text);
+      }
+
+      .modal-image {
+        width: 100%;
+        max-width: 400px;
         height: auto;
         object-fit: contain;
         display: block;
-        margin: 0 auto;
+        margin: var(--spacing-lg) auto;
+        border-radius: var(--radius-lg);
       }
-	    
-	    .close {
-	        color: #aaa;
-	        float: right;
-	        font-size: 28px;
-	        font-weight: bold;
-	    }
-	    .close:hover,
-	    .close:focus {
-	        color: black;
-	        text-decoration: none;
-	        cursor: pointer;
-	    }
+
+      .modal-text {
+        font-size: 0.95rem;
+        color: var(--color-text);
+        line-height: 1.6;
+        word-break: break-word;
+        background: var(--color-gray-50);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        border-left: 4px solid var(--color-primary);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Section Group */
+      .section-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .section-header {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: var(--spacing-md) 0;
+        border-bottom: 2px solid var(--color-gray-200);
+      }
+
+      /* Utility */
+      .flex {
+        display: flex;
+        gap: var(--spacing-md);
+      }
+
+      .flex-col {
+        flex-direction: column;
+      }
+
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+
+      .mt {
+        margin-top: var(--spacing-md);
+      }
+
+      .mb {
+        margin-bottom: var(--spacing-md);
+      }
+
+      /* Datalist */
+      .datalist-container {
+        position: relative;
+      }
+
+      /* Input Field Container */
+      .input-field-container {
+        background: var(--color-gray-50);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .input-field-item {
+        display: flex;
+        gap: var(--spacing-sm);
+        align-items: flex-end;
+      }
+
+      .input-field-item input {
+        flex: 1;
+      }
+
+      .input-field-item .btn-small {
+        flex-shrink: 0;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .form-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .form-row .form-group {
+          min-width: auto;
+        }
+
+        .toolbar {
+          flex-direction: column;
+        }
+
+        .toolbar .btn {
+          width: 100%;
+        }
+      }
+
+      /* Status Badge */
+      .badge {
+        display: inline-block;
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: 99px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-success {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .badge-error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+      }
     </style>
-    
-    
-    <script>
-      var arrayListCallbackName = {}
-    
-      function sendBridge(funcName, msg) {
-        const functionName = funcName;
-        const message = msg
-        
-        if (window.JSBridge) {
-          callNativeFunction(functionName, message);
-        } else if (window.webkit) {
-          var iosFunction = { name: functionName };
-          message.forEach((i) => {
-            iosFunction[i.key] = i.value
-          })
-		      window.webkit.messageHandlers.observer.postMessage(iosFunction);
-		    } else {
-					var value = { name: functionName };
-          message.forEach((i) => {
-            value[i.key] = i.value
-          })
-          showModal("interface is not available func: " + functionName + " data: " +  JSON.stringify(value) + ".");
-        }
-      }
-      
-      function clearCallback() {
-        if (Object.keys(arrayListCallbackName).length !== 0) {
-					delete window[arrayListCallbackName['functionName']]
-        }
-        arrayListCallbackName = {}
-      }
-        
-      function callNativeFunction(functionName, message) {
-        if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
-          window.JSBridge[functionName](...message.map(m => m.value));
-        } else {
-          console.error("Function " + functionName + " not found in JSBridge interface.");
-        }
-      }
-      
-      function showModal(message) {
-        document.getElementById('modalText').innerText = message.substring(0, 50);
-        document.getElementById('modalText').style.display = 'flex'
-        document.getElementById('myModal').style.display = 'block';
-        document.getElementById('modalImage').style.display = 'none';
-	    }
-	    
-	    function showModalImage(base64) {
-        document.getElementById('modalImage').src = `data:image/*;base64,${base64}`;
-        document.getElementById('modalImage').style.display = 'flex'
-        document.getElementById('myModal').style.display = 'block';
-				document.getElementById('modalText').style.display = 'none';    
-	    }
-	
-	    function closeModal() {
-	        document.getElementById('myModal').style.display = 'none';
-	    }
-    </script>
-    
-    <script>
-    
-      function getCameraImage() {
-        sendBridge('getCameraImage', [])
-        if (window.bridge) {
-	        window.bridge.getCameraImageCallback = (base64Image) => {  showModalImage(base64Image) };
-			    window.bridge.getCameraImageCallbackError = (errorCode, errorDescription) => {  showModal(`getCameraImageCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-      function getGalleryImage() {
-				sendBridge('getGalleryImage', [])
-				window.bridge.getGalleryImageCallback = (base64Image) => {  showModalImage(base64Image) };
-				if (window.bridge) {
-			    window.bridge.getGalleryImageCallbackError = (errorCode, errorDescription) => {  showModal(`getGalleryImageCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-    
-      function saveImageToGallery() {
-				let imgElement = new Image();
-				imgElement.crossOrigin = "Anonymous"; 
-				imgElement.src = document.querySelector('input[name=saveImageToGalleryRadio]:checked').parentElement.querySelector('img').src; 
-				
-				imgElement.onload = function() {
-				  let base64 = getBase64Image(imgElement);
-				  sendBridge('saveImageToGallery', [{
-						key:"base64Str", 
-						value: base64
-					}]
-				)};
-				if (window.bridge) {
-					window.bridge.saveImageToGalleryCallback = (data) => {  showModal(`saveImageToGalleryCallback: ${data}`) };
-			    window.bridge.saveImageToGalleryCallbackError = (errorCode, errorDescription) => {  showModal(`saveImageToGalleryCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-			}
-     
-      function openPayment() {
-        var txnRefId = document.getElementById("openPaymenttxnRefId").value
-				sendBridge('openPayment', [{key:"txnRefId", value:txnRefId}])
-				if (window.bridge) {
-					window.bridge.openPaymentCallbackError = (errorCode, errorDescription) => {  showModal(`openPaymentCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-			function openWebview() {
-				var webUrl = document.getElementById('openWebviewwebUrl').value
-				var suggestWebLink = getDatalistValues('weblink')
-				
-				if (isValueInDatalist(suggestWebLink, webUrl)) {
-					suggestWebLink.push(webUrl)
-					sessionStorage.setItem('weblink', JSON.stringify(suggestWebLink))
-					updateDatalist('weblink', suggestWebLink)
-				}
-				
-        sendBridge('openWebview', [{ key: "webUrl", value: webUrl }])
-        if (window.bridge) {
-          window.bridge.openWebviewCallbackError = (errorCode, errorDescription) => {  showModal(`openWebviewCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-      function closeWebview() {
-				sendBridge('closeWebview', [])
-      }
-      
-      function openExternalBrowser() {
-				var webUrl = document.getElementById('openExternalBrowserwebUrl').value
-				var suggestWebLink = getDatalistValues('weblink')
-				
-				if (isValueInDatalist(suggestWebLink, webUrl)) {
-					suggestWebLink.push(webUrl)
-					sessionStorage.setItem('weblink', JSON.stringify(suggestWebLink))
-					updateDatalist('weblink', suggestWebLink)
-				}
-				sendBridge('openExternalBrowser', [{key:"webUrl", value:webUrl }])
-				if (window.bridge) {
-					window.bridge.openExternalBrowserCallbackError = (errorCode, errorDescription) => {  showModal(`openExternalBrowserCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-			function openDeepLink() {
-				var deepUrl = document.getElementById('openDeepLinkdeeplink').value
-				var suggestDeepLink = getDatalistValues('deeplink')
-				
-				if (isValueInDatalist(suggestDeepLink, deepUrl)) {
-					suggestDeepLink.push(deepUrl)
-					sessionStorage.setItem('deeplink', JSON.stringify(suggestDeepLink))
-					updateDatalist('deeplink', suggestDeepLink)
-				}
-			
-				sendBridge('openDeepLink', [{key:"deeplink", value:deepUrl }])
-				if (window.bridge) {
-					window.bridge.openDeepLinkCallbackError = (errorCode, errorDescription) => {  showModal(`openDeepLinkCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-      function openInternalDeepLink() {
-				var deepUrl = document.getElementById('openInternalDeepLinkdeeplink').value
-				var suggestDeepLink = getDatalistValues('deeplink')
-				
-				if (isValueInDatalist(suggestDeepLink, deepUrl)) {
-					suggestDeepLink.push(deepUrl)
-					sessionStorage.setItem('deeplink', JSON.stringify(suggestDeepLink))
-					updateDatalist('deeplink', suggestDeepLink)
-				}
-				sendBridge('openInternalDeepLink', [{key:"deeplink", value:deepUrl}])
-				window.bridge.openInternalDeepLinkCallbackError = (errorCode, errorDescription) => {  showModal(`openInternalDeepLinkCallbackError: ${errorCode}, ${errorDescription}`) };
-      }
-      
-      function openMicrosite() {
-        var webUrl = document.getElementById('openMicrositeweburl').value
-        var title = document.getElementById('openMicrositetitle').value
-        var providerName = document.getElementById('openMicrositeprovidername').value
-				sendBridge('openMicrosite', [
-					{key:"webUrl", value:webUrl},
-					{key:"title", value:title},
-					{key:"providerName", value:providerName},
-				])
-				
-				sessionStorage.setItem('openMicrositeweburl', webUrl)
-				sessionStorage.setItem('openMicrositetitle', title)
-				sessionStorage.setItem('openMicrositeprovidername', providerName)
-				if (window.bridge) {
-					window.bridge.openMicrositeCallback = (result) => {  showModal(`openMicrositeCallback: ${result}`) };
-		      window.bridge.openMicrositeCallbackError = (errorCode, errorDescription) => {  showModal(`openMicrositeCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-      function closeMicrositeWithResult() {
-				var result = document.getElementById('closeMicrositeWithResultresult').value
-				sendBridge('closeMicrositeWithResult', [{key:"result", value:result}])
-			}
-      
-      function openMiniApp() {
-        var uuid = document.getElementById('openMiniAppminiAppUUID').value
-        var destination = document.getElementById('openMiniAppminiAppDestination').value
-        var param = document.getElementById('openMiniAppminiAppParams').value
-      
-				sendBridge('openMiniApp', [
-					{key:"miniAppUUID", value:uuid},
-					{key:"miniAppDestination", value:destination},
-					{key:"miniAppParams", value:param}
-				])
-				if (window.bridge) {
-					window.bridge.openMiniAppCallback = (result) => {  showModal(`openMiniAppCallback: ${result}`) };
-					window.bridge.openMiniAppCallbackError = (errorCode, errorDescription) => {  showModal(`openMiniAppCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-			}
-			
-			function closeMiniAppWithResult() {
-				var result = document.getElementById('closeMiniAppWithResultresult').value
-				sendBridge('closeMiniAppWithResult', [{key:"result", value:result}])
-			}
-			
-			function shareText() {
-				var shareText = document.getElementById('shareTextshareText').value
-				sendBridge('shareText', [{key:"text", value:shareText}])
-			}
-			
-			function copyToClipboard() {
-				var clip = document.getElementById('copyToClipboardText').value
-				sendBridge('copyToClipboard', [{key:"text", value:clip}])
-			}
-			
-			function internalPartnerInitAuth() {
-				// var requiredScope = document.querySelector('input[name=internalPartnerInitAuthRadio]:checked').value == 'True'
-        sendBridge('internalPartnerInitAuth', [
-					// {key:"requirePinScope", value:requiredScope}
-        ])
-				if (window.bridge) {
-					window.bridge.internalPartnerInitAuthCallback = (authorizationCode) => {  showModal(`internalPartnerInitAuthCallbacl: ${authorizationCode}`) };
-			    window.bridge.internalPartnerInitAuthCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerInitAuthCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-      function internalPartnerPinVerify() {
-				var partnerReqId = document.getElementById('internalPartnerPinVerifypartnerReqId').value
-        sendBridge('internalPartnerPinVerify', [{key:"partnerReqId", value:partnerReqId}])
-        if (window.bridge) {
-					window.bridge.internalPartnerPinVerifyCallback = (pinVerRefId) => {  showModal(`internalPartnerPinVerifyCallback: ${pinVerRefId}`) };
-			    window.bridge.internalPartnerPinVerifyCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerPinVerifyCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-			function internalPartnerGATagging() {
-				var ga = document.getElementById('internalPartnerGATaggingga').value.replace(/\n/g, '')
-				sendBridge('internalPartnerGATagging', [{key:"ga", value:ga}])
-        
-        if (window.bridge) {
-          window.bridge.internalPartnerGATaggingCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerGATaggingCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-			
-			function internalPartnerAppsFlyerTagging() {
+  </head>
 
-				var appsFlyer = document.getElementById('internalPartnerAppsFlyerTaggingappsFlyer').value.replace(/\n/g, '')
-				sendBridge('internalPartnerAppsFlyerTagging', [{key:"appsFlyer", value:appsFlyer}])
-				if (window.bridge) {
-					window.bridge.internalPartnerAppsFlyerTaggingCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerAppsFlyerTaggingCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
-      
-      function shareImage() {
-				let imgElement = new Image();
-				imgElement.crossOrigin = "Anonymous"; 
-				imgElement.src = document.querySelector('input[name=shareImageRadio]:checked').parentElement.querySelector('img').src; 
-				
-				imgElement.onload = function() {
-				  let base64 = getBase64Image(imgElement);
-				  sendBridge('shareImage', [{
-						key:"base64Str", 
-						value: base64
-					}])
-				};
-      }
-      
-			function openEmailSetting() {
-				sendBridge('openEmailSetting', [])
-				if (window.bridge) {
-					window.bridge.openEmailSettingCallback = (email) => {  showModal(`openEmailSettingCallback: ${email}`) };
-				}
-      }
-      
-      function openHideUnHideAccount() {
-				sendBridge('openHideUnHideAccount', [])
-				if (window.bridge) {
-	        window.bridge.openHideUnHideAccountCallback = (pinVerRefId) => {  showModal(`openHideUnHideAccountCallback: `) };
-			    window.bridge.openHideUnHideAccountCallbackError = (errorCode, errorDescription) => {  showModal(`openHideUnHideAccountCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-      }
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🔌 JSBridge Tester</h1>
+        <p>Modern interface for testing JavaScript Bridge functions</p>
+      </div>
 
-			function internalPartnerPinWithFaceScanIfNeeded() {
-				var transactionRefId = document.getElementById('internalPartnerPinWithFaceScanIfNeededtransactionRefId').value
-        var partnerRefId = document.getElementById('internalPartnerPinWithFaceScanIfNeededpartnerRefId').value
-      
-				sendBridge('internalPartnerPinWithFaceScanIfNeeded', [
-					{key:"transactionRefId", value:transactionRefId},
-					{key:"partnerRefId", value:partnerRefId}
-				])
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <button class="btn btn-secondary" onclick="clearSession()">
+          🗑️ Clear Session
+        </button>
+        <button class="btn btn-secondary" onclick="testFunction()">
+          ✓ Test JSBridge
+        </button>
+      </div>
 
-				if (window.bridge) {
-	        window.bridge.internalPartnerPinWithFaceScanIfNeededCallback = (transactionRefId, partnerReqId) => {  showModal(`internalPartnerPinWithFaceScanIfNeededCallback: `) };
-			    window.bridge.internalPartnerPinWithFaceScanIfNeededCallbackError = (errorCode, errorDescription) => {  showModal(`internalPartnerPinWithFaceScanIfNeededCallbackError: ${errorCode}, ${errorDescription}`) };
-				}
-			}
-      
-      function customJSBridge() {
-      showModal('test')
-        // var jsFunction = document.getElementById('customJSBFunc').value
-        // sendBridge(jsFunction, getDataFromInputs())
-      }
-      
-      function customCommand() {
-      showModalImage('iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABoklEQVR42u3ZP0tCURgGcI1qqyXMoWhwc3GTyKHMSRxrE3S8g4s63VUj0aIGR10EKb+AYJSDQ21+APELOLr75/r0WCc4SAhChi+cB377++BVz3mvy8TExMRkLYHLdUgRipOlyZKtKWkeqaJ5UipL3FOJ8mQrlpKgS/KsMvgZvdGUsCGm9EqnywZ3U4FmhA01oxty/1agSBDidnH4iGoHIWZ0oRf4IAjz/jP8iWoEYWZ0PC9wTRDqal4gRRAqNS+QIQiV+dsC1SqQTAou0GrhK50OEAhILaDiOEC9Dng8AgvoGQ6BdBrY3hZYQE+vB0SjQgvoaTYBn09qAZXRCCiXgb09oQUcB6jVAK9XYIFuFwiFBD5CgwFgWcDWlrAv8Xj8/bzv7wv8GW23Ab9f4B9Zvw/EYgKPEo0GYNvA7q7Qw9zODv7/OC3/QiP/Snkk+VIvf62iCoQFLrbOF7dzBamrRX25m9/wT8KhHLmXbamD9EITwoaYqJmCq7wnOKAwJchSbCVHJbqjyhLPVKeK5oFKSpFsTZYsTZzCdGBeOZmYmJisJZ/TUpGmPBzpvwAAAABJRU5ErkJggg==')
-        // var jsFunction = document.getElementById('customCommand').value
-        // eval(jsFunction)
-      }
-    </script>
-    
-    <script>
-    
-			function getBase64Image(img) {
-				if (!img || !img.complete || img.naturalWidth === 0) {
-			    console.error("Invalid or broken image");
-			    return null; // คืนค่า null ถ้า img เป็น undefined หรือไม่สามารถโหลดภาพได้
-			  }
-			
-			  var canvas = document.createElement("canvas");
-			  canvas.width = img.width;
-			  canvas.height = img.height;
-			  var ctx = canvas.getContext("2d");
-			  ctx.drawImage(img, 0, 0);
-			  var dataURL = canvas.toDataURL("image/png");
-			  return dataURL.replace(/^data:image\/?[A-z]*;base64,/).replace("undefined", "");
-			}
-			
-			function updateDatalist(datalistId, list) {
-	      var suggestions = document.getElementById(datalistId);
-				suggestions.innerHTML = '';
-	      list.forEach((value)=>{
-	        var option = document.createElement('option');
-	        option.value = value;
-	        suggestions.appendChild(option);
-	      })
-	    }
-	    
-	    function getDatalistValues(datalistId) {
-	      const datalist = document.getElementById(datalistId);
-	      const options = Array.from(datalist.options).map(option => option.value);
-	      return options
-	    }
-	
-	    function isValueInDatalist(list, value) {
-			  return !list.includes(value); 
-			}
-			
-			window.onload = function() {
-	      onRefresh()
-	    }
-	    
-	    function onRefresh() {
-	      window.bridge = {};  
-	    
-				var savedWebLink = JSON.parse(sessionStorage.getItem('weblink')) || [];
-	      if (savedWebLink.length === 0) {
-					savedWebLink.push("https://www.google.com/");
-					savedWebLink.push("https://www.youtube.com/");
-					savedWebLink.push("https://www.instagram.com/");
-					savedWebLink.push("https://x.com/?lang=en&mx=2");
-	      }
-	      updateDatalist('weblink', savedWebLink)
-	      
-	      var savedDeeplink = JSON.parse(sessionStorage.getItem('deeplink')) || [];
-	      if (savedDeeplink.length === 0) {
-					savedDeeplink.push("ktbnext://next.co.th/missionbase");
-					savedDeeplink.push("ktbnext://next.co.th/ktc/productshelf");
-					savedDeeplink.push("ktbnext://next.co.th/loan/landing");
-	      }
-	      updateDatalist('deeplink', savedDeeplink)
-	      
-	      
-			  document.getElementById('openMicrositeweburl').value = sessionStorage.getItem('openMicrositeweburl') || "https://weerawid.github.io/web-test-jsbridge/"
-	      document.getElementById('openMicrositetitle').value = sessionStorage.getItem('openMicrositetitle')
-	      document.getElementById('openMicrositeprovidername').value = sessionStorage.getItem('openMicrositeproviderName')
-	      
-	      document.getElementById('internalPartnerGATaggingga').value = '' +
-						`{\n` +
-						`  "event": {\n` +
-						`    "action": "click",\n` +
-						`    "category": "ProfileCreated",\n` +
-						`    "label": null\n` +
-						`  },\n` +
-						`  "customDimemsions": [\n` +
-						`    {\n` +
-						`      "key": "xxx",\n` +
-						`      "value": "yyy"\n` +
-						`    }\n` +
-						`  ],\n` +
-						`  "firebaseParam": [\n` +
-						`    {\n` +
-						`      "key": "aaa",\n` +
-						`      "value": "bbb"\n` +
-						`    }\n` +
-						`  ]\n` +
-						`}`
-	      
-				document.getElementById('internalPartnerAppsFlyerTaggingappsFlyer').value = '' +
-			      `{\n` +
-						`  "event": {\n` +
-						`    "label": "xxx"\n` +
-						`  },\n` +
-						`  "appsFlyerParam": [\n` +
-						`    {\n` +
-						`      "key": "aaa",\n` +
-						`      "value": "bbb"\n` +
-						`    }\n` +
-						`  ]\n` +
-						`}`
-	    }
-	    
-	    function clearSession() {
-	      sessionStorage.clear()
-	      onRefresh()
-	    }
-	    
-	    function testFunction() {
-	      var A = window.JSBridge['closeWebview']
-	      if (!A) {
-	        showModal('FAILURE')
-	      } else {
-	        showModal('SUCCESS')
-	      }
-	    }
-	    
-	    function addInputField() {
-				const newDiv = document.createElement("div");
-        newDiv.classList.add("input-container");
-        newDiv.style.width = "100%"; 
-        newDiv.style.display = "flex";
-        newDiv.style.marginLeft = "4px";
-        newDiv.style.marginRight = "4px";
+      <!-- Main Content Grid -->
+      <div class="grid">
+        <!-- Media Functions -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">📸</span>
+            Media Functions
+          </div>
+          <div class="card-content">
+            <button class="btn btn-primary btn-full-width" onclick="getCameraImage()">
+              📷 Get Camera Image
+            </button>
+            <button class="btn btn-primary btn-full-width" onclick="getGalleryImage()">
+              🖼️ Get Gallery Image
+            </button>
+            <div class="form-group">
+              <label class="form-label">Save to Gallery</label>
+              <div class="image-selector">
+                <label class="image-option">
+                  <input type="radio" name="saveImageToGalleryRadio" value="option1" checked>
+                  <img src="https://img.icons8.com/?size=24&id=19318&format=png&color=000000" alt="Option 1">
+                </label>
+                <label class="image-option">
+                  <input type="radio" name="saveImageToGalleryRadio" value="option2">
+                  <img src="https://img.icons8.com/?size=24&id=118960&format=png&color=000000" alt="Option 2">
+                </label>
+                <label class="image-option">
+                  <input type="radio" name="saveImageToGalleryRadio" value="option3">
+                  <img src="https://img.icons8.com/?size=24&id=119026&format=png&color=000000" alt="Option 3">
+                </label>
+                <label class="image-option">
+                  <input type="radio" name="saveImageToGalleryRadio" value="option4">
+                  <img src="https://img.icons8.com/?size=24&id=01GWmP9aUoPj&format=png&color=000000" alt="Option 4">
+                </label>
+              </div>
+              <button class="btn btn-primary btn-full-width" onclick="saveImageToGallery()">
+                💾 Save Image
+              </button>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Share Image</label>
+              <div class="image-selector">
+                <label class="image-option">
+                  <input type="radio" name="shareImageRadio" value="option1" checked>
+                  <img src="https://img.icons8.com/?size=24&id=19318&format=png&color=000000" alt="Option 1">
+                </label>
+                <label class="image-option">
+                  <input type="radio" name="shareImageRadio" value="option2">
+                  <img src="https://img.icons8.com/?size=24&id=118960&format=png&color=000000" alt="Option 2">
+                </label>
+                <label class="image-option">
+                  <input type="radio" name="shareImageRadio" value="option3">
+                  <img src="https://img.icons8.com/?size=24&id=119026&format=png&color=000000" alt="Option 3">
+                </label>
+                <label class="image-option">
+                  <input type="radio" name="shareImageRadio" value="option4">
+                  <img src="https://img.icons8.com/?size=24&id=01GWmP9aUoPj&format=png&color=000000" alt="Option 4">
+                </label>
+              </div>
+              <button class="btn btn-primary btn-full-width" onclick="shareImage()">
+                📤 Share Image
+              </button>
+            </div>
+          </div>
+        </div>
 
-				const inputName = document.createElement("input");
-				inputName.name = 'paramName'
-        inputName.type = "text";
-        inputName.placeholder = "Param";
-            
-        const inputValue = document.createElement("input");
-        inputValue.name = 'paramValue'
-        inputValue.type = "text";
-        inputValue.placeholder = "Value";
-        inputValue.style.flex = 0.8;
-            
-        const removeButton = document.createElement("button");
-        removeButton.textContent = "Remove";
-        removeButton.classList.add("remove-button");
-        removeButton.style.marginLeft = "4px";
-        removeButton.style.flex = 0.05;
-        removeButton.onclick = function() {
-            newDiv.remove(); 
-        };
-            
-        newDiv.appendChild(inputName);
-        newDiv.appendChild(inputValue);
-        newDiv.appendChild(removeButton);
-        document.getElementById("inputFieldsContainer").appendChild(newDiv);
-      }
-        
-      function getDataFromInputs() {
-			  const inputContainer = document.getElementById("inputFieldsContainer");
-			  const paramNames = inputContainer.querySelectorAll('[name="paramName"]');
-			  const paramValues = inputContainer.querySelectorAll('[name="paramValue"]');
-			    			
-		    if (paramNames.length !== paramValues.length) {
-	        console.error('The number of paramNames and paramValues do not match.');
-	        return;
-		    }
-			    
-		    const keyValuePairs = Array.from(paramNames).map((paramName, index) => {
-	        return {
-            key: paramName.value,       
-            value: paramValues[index].value 
-	        };
-		    });
-		
-		    return keyValuePairs;
-			}
-    </script>
-	</head>
-	<body>
-		<div class="box-vertical">
-			<div class="box-center">
-				<h1>Send JavaScript Bridge Message v.001.021</h1>
-			</div>
-			<div class="box-horizontal">
-			<button class="button button-default" type="button" onclick="clearSession()">ClearSession</button>
-			<button class="button button-default" type="button" onclick="testFunction()">Test Function</button>
-			</div>
-			
-			<div class="box-vertical" style="margin-top: 16px;">
-				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="getCameraImage()">getCameraImage</button></div>
-				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="getGalleryImage()">getGalleryImage</button></div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="saveImageToGallery()">saveImageToGallery</button>
-					<div>
-						<label>
-							<input type="radio" name="saveImageToGalleryRadio" value="small" checked>
-							<img src="https://img.icons8.com/?size=24&id=19318&format=png&color=000000" alt="Option 1">
-						</label>
-						<label>
-							<input type="radio" name="saveImageToGalleryRadio" value="small">
-							<img src="https://img.icons8.com/?size=24&id=118960&format=png&color=000000" alt="Option 2">
-						</label>
-						<label>
-							<input type="radio" name="saveImageToGalleryRadio" value="small">
-							<img src="https://img.icons8.com/?size=24&id=119026&format=png&color=000000" alt="Option 2">
-						</label>
-						<label>
-							<input type="radio" name="saveImageToGalleryRadio" value="small">
-							<img src="https://img.icons8.com/?size=24&id=01GWmP9aUoPj&format=png&color=000000" alt="Option 2">
-						</label>
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openPayment()">openPayment</button>
-					<div class="form-group">
-						<span>txnRefId</span>
-						<input class="form-field" id="openPaymenttxnRefId" name="txtJSBFunc" type="text" placeholder="txnRefId">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openWebview()">openWebview</button>
-					<div class="form-group">
-						<span>webUrl</span>
-						<input list="weblink" class="form-field" id="openWebviewwebUrl" name="txtJSBFunc" type="text" placeholder="webUrl">
-					</div>
-				</div>
-				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="closeWebview()">closeWebview</button></div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openExternalBrowser()">openExternalBrowser</button>
-					<div class="form-group">
-						<span>webUrl</span>
-						<input list="weblink" class="form-field" id="openExternalBrowserwebUrl" name="txtJSBFunc" type="text" placeholder="webUrl">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openDeepLink()">openDeepLink</button>
-					<div class="form-group">
-						<span>deeplink</span>
-						<input list="deeplink" class="form-field" id="openDeepLinkdeeplink" name="txtJSBFunc" type="text" placeholder="deeplink">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openInternalDeepLink()">openInternalDeepLink</button>
-					<div class="form-group">
-						<span>deeplink</span>
-						<input list="deeplink" class="form-field" id="openInternalDeepLinkdeeplink" name="txtJSBFunc" type="text" placeholder="deeplink">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openMicrosite()">openMicrosite</button>
-					<div class="box-vertical" style="width: 100%;">
-						<div class="form-group">
-							<span>webUrl</span>
-							<input class="form-field" id="openMicrositeweburl" name="txtJSBFunc" type="text" placeholder="webUrl">
-						</div>
-						<div class="form-group">
-							<span>title</span>
-							<input class="form-field" id="openMicrositetitle" name="txtJSBFunc" type="text" placeholder="title">
-						</div>
-						<div class="form-group">
-							<span>providerName</span>
-							<input class="form-field" id="openMicrositeprovidername" name="txtJSBFunc" type="text" placeholder="providerName">
-						</div>
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="closeMicrositeWithResult()">closeMicrositeWithResult</button>
-					<div class="form-group">
-						<span>result</span>
-						<input class="form-field" id="closeMicrositeWithResultresult" name="txtJSBFunc" type="text" placeholder="result">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="openMiniApp()">openMiniApp</button>
-					<div class="box-vertical" style="width: 100%;">
-						<div class="form-group">
-							<span>miniAppUUID</span>
-							<input class="form-field" id="openMiniAppminiAppUUID" name="txtJSBFunc" type="text" placeholder="miniAppUUID">
-						</div>
-						<div class="form-group">
-							<span>miniAppDestination</span>
-							<input class="form-field" id="openMiniAppminiAppDestination" name="txtJSBFunc" type="text" placeholder="miniAppDestination">
-						</div>
-						<div class="form-group">
-							<span>miniAppParams</span>
-							<input class="form-field" id="openMiniAppminiAppParams" name="txtJSBFunc" type="text" placeholder="miniAppParams">
-						</div>
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="closeMiniAppWithResult()">closeMiniAppWithResult</button>
-					<div class="form-group">
-						<span>result</span>
-						<input class="form-field" id="closeMiniAppWithResultresult" name="txtJSBFunc" type="text" placeholder="result">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="shareText()">shareText</button>
-					<div class="form-group">
-						<span>shareText</span>
-						<input class="form-field" id="shareTextshareText" name="txtJSBFunc" type="text" placeholder="text">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="copyToClipboard()">copyToClipboard</button>
-					<div class="form-group">
-						<span>text</span>
-						<input class="form-field" id="copyToClipboardText" name="txtJSBFunc" type="text" placeholder="text">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="internalPartnerInitAuth()">internalPartnerInitAuth</button>
-					
-					<!-- <div class="form-group">
-						<span>requirePinScope</span>
-						<div class="box-center box-formfield form-field">
-							<label>
-								<input type="radio" name="internalPartnerInitAuthRadio" value="true" checked>
-								<span>True</span>
-							</label>
-							<label>
-								<input type="radio" name="internalPartnerInitAuthRadio" value="false">
-								<span>False</span>
-							</label>
-						</div>
-					</div> -->
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="internalPartnerPinVerify()">internalPartnerPinVerify</button>
-					<div class="form-group">
-						<span>partnerReqId</span>
-						<input class="form-field" id="internalPartnerPinVerifypartnerReqId" name="txtJSBFunc" type="text" placeholder="partnerReqId">
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="internalPartnerGATagging()">internalPartnerGATagging</button>
-					<div class="form-group">
-						<span>ga</span>
-						<textarea class="form-field" id="internalPartnerGATaggingga" rows="20" cols="50"></textarea>
-					</div>
-				</div>
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="internalPartnerAppsFlyerTagging()">internalPartnerAppsFlyerTagging</button>
-					<div class="form-group">
-						<span>appsFlyer</span>
-						<textarea class="form-field" id="internalPartnerAppsFlyerTaggingappsFlyer" rows="20" cols="50"></textarea>
-					</div>
-				</div>
-				
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="shareImage()">shareImage</button>
-					<div>
-						<label>
-							<input type="radio" name="shareImageRadio" value="small" checked>
-							<img src="https://img.icons8.com/?size=24&id=19318&format=png&color=000000" alt="Option 1">
-						</label>
-						<label>
-							<input type="radio" name="shareImageRadio" value="small">
-							<img src="https://img.icons8.com/?size=24&id=118960&format=png&color=000000" alt="Option 2">
-						</label>
-						<label>
-							<input type="radio" name="shareImageRadio" value="small">
-							<img src="https://img.icons8.com/?size=24&id=119026&format=png&color=000000" alt="Option 2">
-						</label>
-						<label>
-							<input type="radio" name="shareImageRadio" value="small">
-							<img src="https://img.icons8.com/?size=24&id=01GWmP9aUoPj&format=png&color=000000" alt="Option 2">
-						</label>
-					</div>
-				</div>
-				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="openEmailSetting()">openEmailSetting</button></div>
-				<div class="box-horizontal"><button class="button button-primary" type="button" onclick="openHideUnHideAccount()">openHideUnHideAccount</button></div>
-				
-				<div class="box-horizontal">
-					<button class="button button-primary" type="button" onclick="internalPartnerPinWithFaceScanIfNeeded()">internalPartnerPinWithFaceScanIfNeeded</button>
-					<div class="box-vertical" style="width: 100%;">
-						<div class="form-group">
-							<span>transactionRefId</span>
-							<input class="form-field" id="internalPartnerPinWithFaceScanIfNeededtransactionRefId" name="txtJSBFunc" type="text" placeholder="text">
-						</div>
+        <!-- Payment & Navigation -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">💳</span>
+            Payment & Navigation
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">Transaction ID</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input class="form-input" id="openPaymenttxnRefId" type="text" placeholder="txnRefId">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="openPayment()">
+                  Open Payment
+                </button>
+              </div>
+            </div>
 
-						<div class="form-group">
-							<span>partnerRefId</span>
-							<input class="form-field" id="internalPartnerPinWithFaceScanIfNeededpartnerRefId" name="txtJSBFunc" type="text" placeholder="text">
-						</div>
-					</div>
-				</div>
+            <div class="section-header mt">Webview</div>
+            <div class="form-group">
+              <label class="form-label">Web URL</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input list="weblink" class="form-input" id="openWebviewwebUrl" type="text" placeholder="https://example.com">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="openWebview()">
+                  Open
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-full-width" onclick="closeWebview()">
+              Close Webview
+            </button>
 
-				<div class="box-vertical">
-					<div class="form-group">
-						<span>function name</span>
-						<input class="form-field" id="customJSBFunc" name="customJSBFunc" type="text" placeholder="function" autocomplete="on" required>
-					</div>
-					
-					<div class="form-group box-horizontal">
-						<span>Data value</span>
-						<div class="box-vertical form-field expand" id="inputFieldsContainer">
-							
-						</div>
-						<button class="button button-primary" onclick="addInputField()">Add</button>
-					</div>
-					
-					<button class="button button-primary" type="button" onclick="customJSBridge()">Send JSBridge</button>
-				</div>
-				
-				<div class="box-vertical">
-					<div class="form-group">
-						<span>eval command</span>
-						<input class="form-field" id="customCommand" name="customCommand" type="text" placeholder="function" autocomplete="on" required>
-					</div>
-					
-					<button class="button button-primary" type="button" onclick="customCommand()">Send Command</button>
-				</div>
-			</div>
-		</div>
-		
-		<datalist id="weblink"></datalist>
-		<datalist id="deeplink"></datalist>
-		
-		<div id="myModal" class="modal">
-			<div class="modal-content">
-				<span class="close" onclick="closeModal()">&times;</span>
-				<p id="modalText">Initial message</p>
-				<img id="modalImage"></img>
-			</div>
-		</div>
-	</body>
+            <div class="section-header mt">External Browser</div>
+            <div class="form-group">
+              <label class="form-label">Web URL</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input list="weblink" class="form-input" id="openExternalBrowserwebUrl" type="text" placeholder="https://example.com">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="openExternalBrowser()">
+                  Open
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deep Links -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">🔗</span>
+            Deep Links
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">External Deep Link</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input list="deeplink" class="form-input" id="openDeepLinkdeeplink" type="text" placeholder="app://path">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="openDeepLink()">
+                  Open
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Internal Deep Link</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input list="deeplink" class="form-input" id="openInternalDeepLinkdeeplink" type="text" placeholder="app://path">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="openInternalDeepLink()">
+                  Open
+                </button>
+              </div>
+            </div>
+
+            <div class="section-header mt">App Route</div>
+            <div class="form-group">
+              <label class="form-label">Feature Name</label>
+              <input class="form-input" id="openAppRouteFeatureName" type="text" placeholder="feature_name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Screen Name</label>
+              <input class="form-input" id="openAppRouteScreenName" type="text" placeholder="screen_name">
+            </div>
+            <button class="btn btn-primary btn-full-width" onclick="openAppRoute()">
+              🚀 Open App Route
+            </button>
+          </div>
+        </div>
+
+        <!-- Microsite & Mini App -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">🌐</span>
+            Microsite & Mini App
+          </div>
+          <div class="card-content">
+            <div class="section-header">Microsite</div>
+            <div class="form-group">
+              <label class="form-label">Web URL</label>
+              <input class="form-input" id="openMicrositeweburl" type="text" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Title</label>
+              <input class="form-input" id="openMicrositetitle" type="text" placeholder="Title">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Provider Name</label>
+              <input class="form-input" id="openMicrositeprovidername" type="text" placeholder="Provider">
+            </div>
+            <button class="btn btn-primary btn-full-width" onclick="openMicrosite()">
+              Open Microsite
+            </button>
+            <div class="form-group mt">
+              <label class="form-label">Close with Result</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input class="form-input" id="closeMicrositeWithResultresult" type="text" placeholder="result">
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="closeMicrositeWithResult()">
+                  Close
+                </button>
+              </div>
+            </div>
+
+            <div class="section-header mt">Mini App</div>
+            <div class="form-group">
+              <label class="form-label">Mini App UUID</label>
+              <input class="form-input" id="openMiniAppminiAppUUID" type="text" placeholder="UUID">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Destination</label>
+              <input class="form-input" id="openMiniAppminiAppDestination" type="text" placeholder="destination">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Parameters</label>
+              <input class="form-input" id="openMiniAppminiAppParams" type="text" placeholder="params">
+            </div>
+            <button class="btn btn-primary btn-full-width" onclick="openMiniApp()">
+              Open Mini App
+            </button>
+            <div class="form-group mt">
+              <label class="form-label">Close with Result</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input class="form-input" id="closeMiniAppWithResultresult" type="text" placeholder="result">
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="closeMiniAppWithResult()">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sharing & Account -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">👤</span>
+            Sharing & Account
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">Share Text</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input class="form-input" id="shareTextshareText" type="text" placeholder="Text to share">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="shareText()">
+                  Share
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Copy to Clipboard</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input class="form-input" id="copyToClipboardText" type="text" placeholder="Text to copy">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="copyToClipboard()">
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-full-width mt" onclick="openEmailSetting()">
+              ✉️ Email Settings
+            </button>
+
+            <button class="btn btn-secondary btn-full-width mt" onclick="openHideUnHideAccount()">
+              👁️ Hide/Unhide Account
+            </button>
+          </div>
+        </div>
+
+        <!-- Authentication -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">🔐</span>
+            Authentication
+          </div>
+          <div class="card-content">
+            <button class="btn btn-primary btn-full-width" onclick="internalPartnerInitAuth()">
+              Init Auth
+            </button>
+
+            <div class="form-group mt">
+              <label class="form-label">Partner Request ID</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input class="form-input" id="internalPartnerPinVerifypartnerReqId" type="text" placeholder="partnerReqId">
+                </div>
+                <button class="btn btn-primary btn-small" onclick="internalPartnerPinVerify()">
+                  Verify PIN
+                </button>
+              </div>
+            </div>
+
+            <div class="section-header mt">PIN with Face Scan</div>
+            <div class="form-group">
+              <label class="form-label">Transaction ID</label>
+              <input class="form-input" id="internalPartnerPinWithFaceScanIfNeededtransactionRefId" type="text" placeholder="transactionRefId">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Partner Ref ID</label>
+              <input class="form-input" id="internalPartnerPinWithFaceScanIfNeededpartnerRefId" type="text" placeholder="partnerRefId">
+            </div>
+            <button class="btn btn-primary btn-full-width" onclick="internalPartnerPinWithFaceScanIfNeeded()">
+              Verify PIN & Face Scan
+            </button>
+          </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">📊</span>
+            Analytics Tagging
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">Google Analytics</label>
+              <textarea class="form-textarea" id="internalPartnerGATaggingga" placeholder="GA JSON data"></textarea>
+              <button class="btn btn-primary btn-full-width" onclick="internalPartnerGATagging()">
+                Send GA Tag
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">AppsFlyer</label>
+              <textarea class="form-textarea" id="internalPartnerAppsFlyerTaggingappsFlyer" placeholder="AppsFlyer JSON data"></textarea>
+              <button class="btn btn-primary btn-full-width" onclick="internalPartnerAppsFlyerTagging()">
+                Send AppsFlyer Tag
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Functions -->
+        <div class="card">
+          <div class="card-title">
+            <span class="card-icon">⚙️</span>
+            Custom Functions
+          </div>
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">Function Name</label>
+              <input class="form-input" id="customJSBFunc" type="text" placeholder="function_name">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Parameters</label>
+              <div id="inputFieldsContainer" class="input-field-container">
+                <!-- Dynamic inputs will be added here -->
+              </div>
+              <button class="btn btn-secondary btn-full-width mt" onclick="addInputField()">
+                + Add Parameter
+              </button>
+            </div>
+
+            <button class="btn btn-primary btn-full-width" onclick="customJSBridge()">
+              Send JSBridge
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datalists -->
+      <datalist id="weblink"></datalist>
+      <datalist id="deeplink"></datalist>
+
+      <!-- Modal -->
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title" id="modalTitle">Response</div>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+          </div>
+          <p id="modalText" class="modal-text" style="display: none;"></p>
+          <img id="modalImage" class="modal-image" style="display: none;"></img>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/scripts/jsbridge.js"></script>
+    <script src="/scripts/ui.js"></script>
+    <script src="/scripts/init.js"></script>
+  </body>
 </html>
