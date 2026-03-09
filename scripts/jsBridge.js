@@ -49,7 +49,11 @@ function callNativeFunction(functionName, message) {
     window.JSBridge &&
     typeof window.JSBridge[functionName] === 'function'
   ) {
-    window.JSBridge[functionName](...message.map((m) => m.value));
+    const jsonObj = {};
+    (message || []).forEach((item) => {
+      jsonObj[item.key] = item.value;
+    });
+    window.JSBridge[functionName](jsonObj);
   } else {
     console.error(`Function ${functionName} not found in JSBridge interface.`);
   }
