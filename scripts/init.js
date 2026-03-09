@@ -15,6 +15,36 @@ window.onload = function () {
  */
 function onRefresh() {
   window.bridge = {};
+  window.onerror = function (message, source, lineno, colno, error) {
+    debugLog(`ERROR: ${message} (${source}:${lineno})`);
+  };
+
+  const btn = document.getElementById("debug-btn");
+  const consoleDiv = document.getElementById("debug-console");
+
+  /* toggle console */
+  btn.onclick = () => {
+    consoleDiv.style.display =
+      consoleDiv.style.display === "none" ? "block" : "none";
+  };
+
+  /* log function */
+  function debugLog(msg) {
+    const line = document.createElement("div");
+    line.textContent = msg;
+    consoleDiv.appendChild(line);
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+  }
+
+  /* override console.log */
+  const originalLog = console.log;
+  console.log = function (...args) {
+    debugLog(args.join(" "));
+    originalLog.apply(console, args);
+  };
+
+/* test */
+console.log("Debug console ready");
 
   // Load weblinks from session storage
   let savedWebLink = JSON.parse(sessionStorage.getItem('weblink')) || [];
@@ -102,3 +132,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+

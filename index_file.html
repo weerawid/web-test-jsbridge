@@ -68,6 +68,7 @@
         margin: 0 auto;
       }
 
+      /* Header */
       .header {
         text-align: center;
         margin-bottom: var(--spacing-xl);
@@ -90,6 +91,7 @@
         font-size: 0.95rem;
       }
 
+      /* Toolbar */
       .toolbar {
         display: flex;
         gap: var(--spacing-md);
@@ -97,6 +99,7 @@
         flex-wrap: wrap;
       }
 
+      /* Grid Layout */
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -104,6 +107,7 @@
         margin-bottom: var(--spacing-lg);
       }
 
+      /* Card */
       .card {
         background: var(--color-white);
         border-radius: var(--radius-lg);
@@ -138,6 +142,7 @@
         gap: var(--spacing-md);
       }
 
+      /* Button Styles */
       .btn {
         padding: var(--spacing-sm) var(--spacing-md);
         border: none;
@@ -193,6 +198,7 @@
         width: 100%;
       }
 
+      /* Form Group */
       .form-group {
         display: flex;
         flex-direction: column;
@@ -233,6 +239,7 @@
         min-height: 120px;
       }
 
+      /* Form Row - สำหรับวางฟิลด์และ button ติดกัน */
       .form-row {
         display: flex;
         gap: var(--spacing-md);
@@ -245,6 +252,37 @@
         min-width: 200px;
       }
 
+      /* Radio & Checkbox */
+      .radio-group,
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .radio-item,
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        cursor: pointer;
+      }
+
+      .radio-item input[type="radio"],
+      .checkbox-item input[type="checkbox"] {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        accent-color: var(--color-primary);
+      }
+
+      .radio-label,
+      .checkbox-label {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      /* Image Selection */
       .image-selector {
         display: flex;
         gap: var(--spacing-md);
@@ -278,6 +316,7 @@
         box-shadow: var(--shadow-md);
       }
 
+      /* Modal */
       .modal {
         display: none;
         position: fixed;
@@ -364,9 +403,14 @@
         border-left: 4px solid var(--color-primary);
       }
 
+      /* Animations */
       @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
 
       @keyframes slideUp {
@@ -380,6 +424,13 @@
         }
       }
 
+      /* Section Group */
+      .section-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
       .section-header {
         font-size: 1rem;
         font-weight: 700;
@@ -390,6 +441,20 @@
         border-bottom: 2px solid var(--color-gray-200);
       }
 
+      /* Utility */
+      .flex {
+        display: flex;
+        gap: var(--spacing-md);
+      }
+
+      .flex-col {
+        flex-direction: column;
+      }
+
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+
       .mt {
         margin-top: var(--spacing-md);
       }
@@ -398,6 +463,12 @@
         margin-bottom: var(--spacing-md);
       }
 
+      /* Datalist */
+      .datalist-container {
+        position: relative;
+      }
+
+      /* Input Field Container */
       .input-field-container {
         background: var(--color-gray-50);
         border: 1px solid var(--color-gray-200);
@@ -422,6 +493,7 @@
         flex-shrink: 0;
       }
 
+      /* Responsive */
       @media (max-width: 768px) {
         .grid {
           grid-template-columns: 1fr;
@@ -448,16 +520,74 @@
           width: 100%;
         }
       }
+
+      /* Status Badge */
+      .badge {
+        display: inline-block;
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: 99px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .badge-success {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .badge-error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      #debug-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #333;
+        color: white;
+        font-size: 24px;
+        border: none;
+        cursor: pointer;
+        z-index: 9999;
+      }
+
+      /* console panel */
+      #debug-console {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 350px;
+        height: 250px;
+        background: black;
+        color: #00ff00;
+        font-family: monospace;
+        padding: 10px;
+        overflow-y: auto;
+        display: none;
+        border-radius: 8px;
+        z-index: 9999;
+      }
     </style>
   </head>
 
   <body>
     <div class="container">
+      <!-- Header -->
       <div class="header">
         <h1>🔌 JSBridge Tester</h1>
         <p>Modern interface for testing JavaScript Bridge functions</p>
       </div>
 
+      <!-- Toolbar -->
       <div class="toolbar">
         <button class="btn btn-secondary" onclick="clearSession()">
           🗑️ Clear Session
@@ -467,6 +597,7 @@
         </button>
       </div>
 
+      <!-- Main Content Grid -->
       <div class="grid">
         <!-- Media Functions -->
         <div class="card">
@@ -582,11 +713,11 @@
           </div>
         </div>
 
-        <!-- Deep Links & App Route -->
+        <!-- Deep Links -->
         <div class="card">
           <div class="card-title">
             <span class="card-icon">🔗</span>
-            Deep Links & Routing
+            Deep Links
           </div>
           <div class="card-content">
             <div class="form-group">
@@ -812,6 +943,7 @@
             <div class="form-group">
               <label class="form-label">Parameters</label>
               <div id="inputFieldsContainer" class="input-field-container">
+                <!-- Dynamic inputs will be added here -->
               </div>
               <button class="btn btn-secondary btn-full-width mt" onclick="addInputField()">
                 + Add Parameter
@@ -825,9 +957,11 @@
         </div>
       </div>
 
+      <!-- Datalists -->
       <datalist id="weblink"></datalist>
       <datalist id="deeplink"></datalist>
 
+      <!-- Modal -->
       <div id="myModal" class="modal">
         <div class="modal-content">
           <div class="modal-header">
@@ -840,614 +974,9 @@
       </div>
     </div>
 
-    <script>
-      // ===== BRIDGE CORE =====
-      window.bridge = {};
-      let arrayListCallbackName = {};
-
-      function sendBridge(funcName, msg) {
-        const functionName = funcName;
-        const message = msg;
-
-        if (window.JSBridge) {
-          callNativeFunction(functionName, message);
-        } else if (window.webkit) {
-          const iosFunction = { name: functionName };
-          message.forEach((i) => {
-            iosFunction[i.key] = i.value;
-          });
-          window.webkit.messageHandlers.observer.postMessage(iosFunction);
-        } else {
-          const value = { name: functionName };
-          message.forEach((i) => {
-            value[i.key] = i.value;
-          });
-          showModal(`Bridge not available\n\nFunction: ${functionName}\nData: ${JSON.stringify(value)}`, 'error');
-        }
-      }
-
-      function callNativeFunction(functionName, message) {
-        if (window.JSBridge && typeof window.JSBridge[functionName] === 'function') {
-          window.JSBridge[functionName](...message.map((m) => m.value));
-        } else {
-          console.error(`Function ${functionName} not found in JSBridge interface.`);
-        }
-      }
-
-      function getBase64Image(img) {
-        if (!img || !img.complete || img.naturalWidth === 0) {
-          console.error('Invalid or broken image');
-          return null;
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        const dataURL = canvas.toDataURL('image/png');
-        return dataURL.replace(/^data:image\/?[A-z]*;base64,/).replace('undefined', '');
-      }
-
-      // ===== UI FUNCTIONS =====
-      function showModal(message, type = 'info') {
-        const modal = document.getElementById('myModal');
-        const modalText = document.getElementById('modalText');
-        const modalImage = document.getElementById('modalImage');
-        const modalTitle = document.getElementById('modalTitle');
-
-        const titles = {
-          success: '✓ Success',
-          error: '✗ Error',
-          warning: '⚠ Warning',
-          info: 'ℹ Info',
-        };
-        modalTitle.textContent = titles[type] || 'Response';
-
-        modalText.innerText = message.substring(0, 500);
-        modalText.style.display = 'block';
-        modalImage.style.display = 'none';
-
-        modal.classList.add('active');
-      }
-
-      function showModalImage(base64) {
-        const modal = document.getElementById('myModal');
-        const modalImage = document.getElementById('modalImage');
-        const modalText = document.getElementById('modalText');
-        const modalTitle = document.getElementById('modalTitle');
-
-        modalTitle.textContent = 'Image Preview';
-        modalImage.src = `data:image/*;base64,${base64}`;
-        modalImage.style.display = 'block';
-        modalText.style.display = 'none';
-
-        modal.classList.add('active');
-      }
-
-      function closeModal() {
-        const modal = document.getElementById('myModal');
-        modal.classList.remove('active');
-      }
-
-      function updateDatalist(datalistId, list) {
-        const suggestions = document.getElementById(datalistId);
-        suggestions.innerHTML = '';
-        list.forEach((value) => {
-          const option = document.createElement('option');
-          option.value = value;
-          suggestions.appendChild(option);
-        });
-      }
-
-      function getDatalistValues(datalistId) {
-        const datalist = document.getElementById(datalistId);
-        const options = Array.from(datalist.options).map((option) => option.value);
-        return options;
-      }
-
-      function isValueInDatalist(list, value) {
-        return !list.includes(value);
-      }
-
-      function addInputField() {
-        const newDiv = document.createElement('div');
-        newDiv.classList.add('input-field-item');
-
-        const inputName = document.createElement('input');
-        inputName.name = 'paramName';
-        inputName.type = 'text';
-        inputName.placeholder = 'Param Name';
-        inputName.className = 'form-input';
-
-        const inputValue = document.createElement('input');
-        inputValue.name = 'paramValue';
-        inputValue.type = 'text';
-        inputValue.placeholder = 'Param Value';
-        inputValue.className = 'form-input';
-
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.textContent = 'Remove';
-        removeButton.className = 'btn btn-small';
-        removeButton.style.backgroundColor = '#e53935';
-        removeButton.style.color = 'white';
-        removeButton.onclick = function () {
-          newDiv.remove();
-        };
-
-        newDiv.appendChild(inputName);
-        newDiv.appendChild(inputValue);
-        newDiv.appendChild(removeButton);
-        document.getElementById('inputFieldsContainer').appendChild(newDiv);
-      }
-
-      function getDataFromInputs() {
-        const inputContainer = document.getElementById('inputFieldsContainer');
-        const paramNames = inputContainer.querySelectorAll('[name="paramName"]');
-        const paramValues = inputContainer.querySelectorAll('[name="paramValue"]');
-
-        if (paramNames.length !== paramValues.length) {
-          console.error('Parameter count mismatch');
-          return [];
-        }
-
-        const keyValuePairs = Array.from(paramNames).map((paramName, index) => {
-          return {
-            key: paramName.value,
-            value: paramValues[index].value,
-          };
-        });
-
-        return keyValuePairs;
-      }
-
-      function clearSession() {
-        sessionStorage.clear();
-        onRefresh();
-        showModal('Session cleared', 'success');
-      }
-
-      // ===== BRIDGE FUNCTIONS =====
-      function getCameraImage() {
-        sendBridge('getCameraImage', []);
-        if (window.bridge) {
-          window.bridge.getCameraImageCallback = (base64Image) => {
-            showModalImage(base64Image);
-          };
-          window.bridge.getCameraImageCallbackError = (errorCode, errorDescription) => {
-            showModal(`Camera Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function getGalleryImage() {
-        sendBridge('getGalleryImage', []);
-        if (window.bridge) {
-          window.bridge.getGalleryImageCallback = (base64Image) => {
-            showModalImage(base64Image);
-          };
-          window.bridge.getGalleryImageCallbackError = (errorCode, errorDescription) => {
-            showModal(`Gallery Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function saveImageToGallery() {
-        const imgElement = new Image();
-        imgElement.crossOrigin = 'Anonymous';
-        imgElement.src = document
-          .querySelector('input[name=saveImageToGalleryRadio]:checked')
-          .parentElement.querySelector('img').src;
-
-        imgElement.onload = function () {
-          const base64 = getBase64Image(imgElement);
-          sendBridge('saveImageToGallery', [
-            {
-              key: 'base64Str',
-              value: base64,
-            },
-          ]);
-        };
-
-        if (window.bridge) {
-          window.bridge.saveImageToGalleryCallback = (data) => {
-            showModal(`Image saved: ${data}`, 'success');
-          };
-          window.bridge.saveImageToGalleryCallbackError = (errorCode, errorDescription) => {
-            showModal(`Save Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function shareImage() {
-        const imgElement = new Image();
-        imgElement.crossOrigin = 'Anonymous';
-        imgElement.src = document
-          .querySelector('input[name=shareImageRadio]:checked')
-          .parentElement.querySelector('img').src;
-
-        imgElement.onload = function () {
-          const base64 = getBase64Image(imgElement);
-          sendBridge('shareImage', [
-            {
-              key: 'base64Str',
-              value: base64,
-            },
-          ]);
-        };
-      }
-
-      function openPayment() {
-        const txnRefId = document.getElementById('openPaymenttxnRefId').value;
-        sendBridge('openPayment', [{ key: 'txnRefId', value: txnRefId }]);
-        if (window.bridge) {
-          window.bridge.openPaymentCallbackError = (errorCode, errorDescription) => {
-            showModal(`Payment Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function openWebview() {
-        const webUrl = document.getElementById('openWebviewwebUrl').value;
-        const suggestWebLink = getDatalistValues('weblink');
-
-        if (isValueInDatalist(suggestWebLink, webUrl)) {
-          suggestWebLink.push(webUrl);
-          sessionStorage.setItem('weblink', JSON.stringify(suggestWebLink));
-          updateDatalist('weblink', suggestWebLink);
-        }
-
-        sendBridge('openWebview', [{ key: 'webUrl', value: webUrl }]);
-        if (window.bridge) {
-          window.bridge.openWebviewCallbackError = (errorCode, errorDescription) => {
-            showModal(`Webview Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function closeWebview() {
-        sendBridge('closeWebview', []);
-      }
-
-      function openExternalBrowser() {
-        const webUrl = document.getElementById('openExternalBrowserwebUrl').value;
-        const suggestWebLink = getDatalistValues('weblink');
-
-        if (isValueInDatalist(suggestWebLink, webUrl)) {
-          suggestWebLink.push(webUrl);
-          sessionStorage.setItem('weblink', JSON.stringify(suggestWebLink));
-          updateDatalist('weblink', suggestWebLink);
-        }
-
-        sendBridge('openExternalBrowser', [{ key: 'webUrl', value: webUrl }]);
-        if (window.bridge) {
-          window.bridge.openExternalBrowserCallbackError = (errorCode, errorDescription) => {
-            showModal(`Browser Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function openDeepLink() {
-        const deepUrl = document.getElementById('openDeepLinkdeeplink').value;
-        const suggestDeepLink = getDatalistValues('deeplink');
-
-        if (isValueInDatalist(suggestDeepLink, deepUrl)) {
-          suggestDeepLink.push(deepUrl);
-          sessionStorage.setItem('deeplink', JSON.stringify(suggestDeepLink));
-          updateDatalist('deeplink', suggestDeepLink);
-        }
-
-        sendBridge('openDeepLink', [{ key: 'deeplink', value: deepUrl }]);
-        if (window.bridge) {
-          window.bridge.openDeepLinkCallbackError = (errorCode, errorDescription) => {
-            showModal(`Deep Link Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function openInternalDeepLink() {
-        const deepUrl = document.getElementById('openInternalDeepLinkdeeplink').value;
-        const suggestDeepLink = getDatalistValues('deeplink');
-
-        if (isValueInDatalist(suggestDeepLink, deepUrl)) {
-          suggestDeepLink.push(deepUrl);
-          sessionStorage.setItem('deeplink', JSON.stringify(suggestDeepLink));
-          updateDatalist('deeplink', suggestDeepLink);
-        }
-
-        sendBridge('openInternalDeepLink', [{ key: 'deeplink', value: deepUrl }]);
-        if (window.bridge) {
-          window.bridge.openInternalDeepLinkCallbackError = (errorCode, errorDescription) => {
-            showModal(`Internal Deep Link Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      // ***** NEW FUNCTION: openAppRoute *****
-      function openAppRoute() {
-        const featureName = document.getElementById('openAppRouteFeatureName').value;
-        const screenName = document.getElementById('openAppRouteScreenName').value;
-
-        if (!featureName || !screenName) {
-          showModal('Please fill in Feature Name and Screen Name', 'warning');
-          return;
-        }
-
-        sendBridge('openAppRoute', [
-          { key: 'featureName', value: featureName },
-          { key: 'screenName', value: screenName },
-        ]);
-
-        if (window.bridge) {
-          window.bridge.openAppRouteCallback = (result) => {
-            showModal(`App Route opened: ${result}`, 'success');
-          };
-          window.bridge.openAppRouteCallbackError = (errorCode, errorDescription) => {
-            showModal(
-              `App Route Error: ${errorCode}\n${errorDescription}`,
-              'error'
-            );
-          };
-        }
-      }
-
-      function openMicrosite() {
-        const webUrl = document.getElementById('openMicrositeweburl').value;
-        const title = document.getElementById('openMicrositetitle').value;
-        const providerName = document.getElementById('openMicrositeprovidername').value;
-
-        sendBridge('openMicrosite', [
-          { key: 'webUrl', value: webUrl },
-          { key: 'title', value: title },
-          { key: 'providerName', value: providerName },
-        ]);
-
-        sessionStorage.setItem('openMicrositeweburl', webUrl);
-        sessionStorage.setItem('openMicrositetitle', title);
-        sessionStorage.setItem('openMicrositeprovidername', providerName);
-
-        if (window.bridge) {
-          window.bridge.openMicrositeCallback = (result) => {
-            showModal(`Microsite result: ${result}`, 'success');
-          };
-          window.bridge.openMicrositeCallbackError = (errorCode, errorDescription) => {
-            showModal(`Microsite Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function closeMicrositeWithResult() {
-        const result = document.getElementById('closeMicrositeWithResultresult').value;
-        sendBridge('closeMicrositeWithResult', [{ key: 'result', value: result }]);
-      }
-
-      function openMiniApp() {
-        const uuid = document.getElementById('openMiniAppminiAppUUID').value;
-        const destination = document.getElementById('openMiniAppminiAppDestination').value;
-        const param = document.getElementById('openMiniAppminiAppParams').value;
-
-        sendBridge('openMiniApp', [
-          { key: 'miniAppUUID', value: uuid },
-          { key: 'miniAppDestination', value: destination },
-          { key: 'miniAppParams', value: param },
-        ]);
-
-        if (window.bridge) {
-          window.bridge.openMiniAppCallback = (result) => {
-            showModal(`Mini App result: ${result}`, 'success');
-          };
-          window.bridge.openMiniAppCallbackError = (errorCode, errorDescription) => {
-            showModal(`Mini App Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function closeMiniAppWithResult() {
-        const result = document.getElementById('closeMiniAppWithResultresult').value;
-        sendBridge('closeMiniAppWithResult', [{ key: 'result', value: result }]);
-      }
-
-      function shareText() {
-        const shareText = document.getElementById('shareTextshareText').value;
-        sendBridge('shareText', [{ key: 'text', value: shareText }]);
-      }
-
-      function copyToClipboard() {
-        const clip = document.getElementById('copyToClipboardText').value;
-        sendBridge('copyToClipboard', [{ key: 'text', value: clip }]);
-      }
-
-      function internalPartnerInitAuth() {
-        sendBridge('internalPartnerInitAuth', []);
-        if (window.bridge) {
-          window.bridge.internalPartnerInitAuthCallback = (authorizationCode) => {
-            showModal(`Auth Code: ${authorizationCode}`, 'success');
-          };
-          window.bridge.internalPartnerInitAuthCallbackError = (errorCode, errorDescription) => {
-            showModal(`Auth Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function internalPartnerPinVerify() {
-        const partnerReqId = document.getElementById('internalPartnerPinVerifypartnerReqId').value;
-        sendBridge('internalPartnerPinVerify', [{ key: 'partnerReqId', value: partnerReqId }]);
-        if (window.bridge) {
-          window.bridge.internalPartnerPinVerifyCallback = (pinVerRefId) => {
-            showModal(`PIN Verified: ${pinVerRefId}`, 'success');
-          };
-          window.bridge.internalPartnerPinVerifyCallbackError = (errorCode, errorDescription) => {
-            showModal(`PIN Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function internalPartnerGATagging() {
-        const ga = document.getElementById('internalPartnerGATaggingga').value.replace(/\n/g, '');
-        sendBridge('internalPartnerGATagging', [{ key: 'ga', value: ga }]);
-
-        if (window.bridge) {
-          window.bridge.internalPartnerGATaggingCallbackError = (errorCode, errorDescription) => {
-            showModal(`GA Tagging Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function internalPartnerAppsFlyerTagging() {
-        const appsFlyer = document
-          .getElementById('internalPartnerAppsFlyerTaggingappsFlyer')
-          .value.replace(/\n/g, '');
-        sendBridge('internalPartnerAppsFlyerTagging', [
-          { key: 'appsFlyer', value: appsFlyer },
-        ]);
-        if (window.bridge) {
-          window.bridge.internalPartnerAppsFlyerTaggingCallbackError = (
-            errorCode,
-            errorDescription
-          ) => {
-            showModal(`AppsFlyer Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function openEmailSetting() {
-        sendBridge('openEmailSetting', []);
-        if (window.bridge) {
-          window.bridge.openEmailSettingCallback = (email) => {
-            showModal(`Email: ${email}`, 'success');
-          };
-        }
-      }
-
-      function openHideUnHideAccount() {
-        sendBridge('openHideUnHideAccount', []);
-        if (window.bridge) {
-          window.bridge.openHideUnHideAccountCallback = () => {
-            showModal('Account settings updated', 'success');
-          };
-          window.bridge.openHideUnHideAccountCallbackError = (errorCode, errorDescription) => {
-            showModal(`Account Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function internalPartnerPinWithFaceScanIfNeeded() {
-        const transactionRefId = document.getElementById(
-          'internalPartnerPinWithFaceScanIfNeededtransactionRefId'
-        ).value;
-        const partnerRefId = document.getElementById(
-          'internalPartnerPinWithFaceScanIfNeededpartnerRefId'
-        ).value;
-
-        sendBridge('internalPartnerPinWithFaceScanIfNeeded', [
-          { key: 'transactionRefId', value: transactionRefId },
-          { key: 'partnerRefId', value: partnerRefId },
-        ]);
-
-        if (window.bridge) {
-          window.bridge.internalPartnerPinWithFaceScanIfNeededCallback = () => {
-            showModal('PIN and face scan verification completed', 'success');
-          };
-          window.bridge.internalPartnerPinWithFaceScanIfNeededCallbackError = (
-            errorCode,
-            errorDescription
-          ) => {
-            showModal(`Verification Error: ${errorCode}\n${errorDescription}`, 'error');
-          };
-        }
-      }
-
-      function customJSBridge() {
-        const jsFunction = document.getElementById('customJSBFunc').value;
-        const data = getDataFromInputs();
-
-        if (!jsFunction) {
-          showModal('Please enter a function name', 'warning');
-          return;
-        }
-
-        sendBridge(jsFunction, data);
-        showModal(`Sent: ${jsFunction}`, 'success');
-      }
-
-      function testFunction() {
-        const available = window.JSBridge && typeof window.JSBridge === 'object';
-        if (available) {
-          showModal('✓ JSBridge is available', 'success');
-        } else {
-          showModal('✗ JSBridge is not available', 'error');
-        }
-      }
-
-      // ===== INITIALIZATION =====
-      window.onload = function () {
-        onRefresh();
-      };
-
-      function onRefresh() {
-        window.bridge = {};
-
-        let savedWebLink = JSON.parse(sessionStorage.getItem('weblink')) || [];
-        if (savedWebLink.length === 0) {
-          savedWebLink = [
-            'https://www.google.com/',
-            'https://www.youtube.com/',
-            'https://www.instagram.com/',
-            'https://x.com/?lang=en&mx=2',
-          ];
-        }
-        updateDatalist('weblink', savedWebLink);
-
-        let savedDeeplink = JSON.parse(sessionStorage.getItem('deeplink')) || [];
-        if (savedDeeplink.length === 0) {
-          savedDeeplink = [
-            'ktbnext://next.co.th/missionbase',
-            'ktbnext://next.co.th/ktc/productshelf',
-            'ktbnext://next.co.th/loan/landing',
-          ];
-        }
-        updateDatalist('deeplink', savedDeeplink);
-
-        document.getElementById('openMicrositeweburl').value =
-          sessionStorage.getItem('openMicrositeweburl') || 'https://weerawid.github.io/web-test-jsbridge/';
-        document.getElementById('openMicrositetitle').value =
-          sessionStorage.getItem('openMicrositetitle') || '';
-        document.getElementById('openMicrositeprovidername').value =
-          sessionStorage.getItem('openMicrositeprovidername') || '';
-
-        document.getElementById('internalPartnerGATaggingga').value = `{
-  "event": {
-    "action": "click",
-    "category": "ProfileCreated",
-    "label": null
-  },
-  "customDimemsions": [
-    {
-      "key": "xxx",
-      "value": "yyy"
-    }
-  ],
-  "firebaseParam": [
-    {
-      "key": "aaa",
-      "value": "bbb"
-    }
-  ]
-}`;
-
-        document.getElementById('internalPartnerAppsFlyerTaggingappsFlyer').value = `{
-  "event": {
-    "label": "xxx"
-  },
-  "appsFlyerParam": [
-    {
-      "key": "aaa",
-      "value": "bbb"
-    }
-  ]
-}`;
-      }
-    </script>
+    <!-- Scripts -->
+    <script src="/scripts/jsbridge.js"></script>
+    <script src="/scripts/ui.js"></script>
+    <script src="/scripts/init.js"></script>
   </body>
 </html>
