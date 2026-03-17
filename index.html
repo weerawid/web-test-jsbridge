@@ -622,6 +622,10 @@
               <label class="form-label">Screen Name</label>
               <input class="form-input" id="openAppRouteScreenName" type="text" placeholder="screen_name">
             </div>
+            <div class="form-group">
+              <label class="form-label">Additional Data</label>
+              <input class="form-input" id="openAppRouteAdditionalData" type="text" placeholder="additional_data">
+            </div>
             <button class="btn btn-primary btn-full-width" onclick="openAppRoute()">
               🚀 Open App Route
             </button>
@@ -1168,6 +1172,7 @@
       function openAppRoute() {
         const featureName = document.getElementById('openAppRouteFeatureName').value;
         const screenName = document.getElementById('openAppRouteScreenName').value;
+        const additionalData = document.getElementById('openAppRouteAdditionalData').value;
 
         if (!featureName || !screenName) {
           showModal('Please fill in Feature Name and Screen Name', 'warning');
@@ -1177,6 +1182,7 @@
         sendBridge('openAppRoute', [
           { key: 'featureName', value: featureName },
           { key: 'screenName', value: screenName },
+          { key: 'additionalData', value: additionalData },
         ]);
 
         if (window.bridge) {
