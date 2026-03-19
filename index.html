@@ -619,7 +619,7 @@
               <input class="form-input" id="openNativeFeatureName" type="text" placeholder="feature_name">
             </div>
             <div class="form-group">
-              <label class="form-label">Screen Name</label>
+              <label class="form-label">Flow Name</label>
               <input class="form-input" id="openNativeFlowName" type="text" placeholder="flow_name">
             </div>
             <div class="form-group">
@@ -1192,10 +1192,22 @@
           return;
         }
 
+         if (window.bridge) {
+          window.bridge.openNativeCallback = (result) => {
+            showModal(`App Route opened: ${result}`, 'success');
+          };
+          window.bridge.openNativeCallbackError = (errorCode, errorDescription) => {
+            showModal(
+              `App Route Error: ${errorCode}\n${errorDescription}`,
+              'error'
+            );
+          };
+        }
+
         if (window.bridge) {
           const obj = {
             featureName: featureName,
-            flowName: flowName,
+            flowName: flowName.trim,
             additionalParams: additionalParams
           }
           const jsonStr = JSON.stringify(obj)
@@ -1208,20 +1220,6 @@
             { key: 'flowName', value: flowName },
             { key: 'additionalParams', value: additionalParams },
           ]);
-        }
-
-        
-
-        if (window.bridge) {
-          window.bridge.openNativeCallback = (result) => {
-            showModal(`App Route opened: ${result}`, 'success');
-          };
-          window.bridge.openNativeCallbackError = (errorCode, errorDescription) => {
-            showModal(
-              `App Route Error: ${errorCode}\n${errorDescription}`,
-              'error'
-            );
-          };
         }
       }
 
