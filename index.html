@@ -616,17 +616,17 @@
             <div class="section-header mt">App Route</div>
             <div class="form-group">
               <label class="form-label">Feature Name</label>
-              <input class="form-input" id="openAppRouteFeatureName" type="text" placeholder="feature_name">
+              <input class="form-input" id="openNativeFeatureName" type="text" placeholder="feature_name">
             </div>
             <div class="form-group">
               <label class="form-label">Screen Name</label>
-              <input class="form-input" id="openAppRouteScreenName" type="text" placeholder="screen_name">
+              <input class="form-input" id="openNativeFlowName" type="text" placeholder="flow_name">
             </div>
             <div class="form-group">
               <label class="form-label">Additional Data</label>
-              <input class="form-input" id="openAppRouteAdditionalData" type="text" placeholder="additional_data">
+              <input class="form-input" id="openNativeAdditionalParams" type="text" placeholder="additional_params">
             </div>
-            <button class="btn btn-primary btn-full-width" onclick="openAppRoute()">
+            <button class="btn btn-primary btn-full-width" onclick="openNative()">
               🚀 Open App Route
             </button>
           </div>
@@ -1181,28 +1181,42 @@
         }
       }
 
-      // ***** NEW FUNCTION: openAppRoute *****
-      function openAppRoute() {
-        const featureName = document.getElementById('openAppRouteFeatureName').value;
-        const screenName = document.getElementById('openAppRouteScreenName').value;
-        const additionalData = document.getElementById('openAppRouteAdditionalData').value;
+      // ***** NEW FUNCTION: openNative *****
+      function openNative() {
+        const featureName = document.getElementById('openNativeFeatureName').value;
+        const flowName = document.getElementById('openNativeFlowName').value;
+        const additionalParams = document.getElementById('openNativeAdditionalParams').value;
 
         if (!featureName || !screenName) {
           showModal('Please fill in Feature Name and Screen Name', 'warning');
           return;
         }
 
-        sendBridge('openAppRoute', [
-          { key: 'featureName', value: featureName },
-          { key: 'screenName', value: screenName },
-          { key: 'additionalData', value: additionalData },
-        ]);
+        if (window.bridge) {
+          const obj = {
+            featureName: featureName,
+            flowName: flowName,
+            additionalParams: additionalParams
+          }
+          const jsonStr = JSON.stringify(obj)
+          sendBridge('openNative', [
+            { key: 'payload', value: jsonStr }
+          ]);
+        } else {
+           sendBridge('openNative', [
+            { key: 'featureName', value: featureName },
+            { key: 'flowName', value: flowName },
+            { key: 'additionalParams', value: additionalParams },
+          ]);
+        }
+
+        
 
         if (window.bridge) {
-          window.bridge.openAppRouteCallback = (result) => {
+          window.bridge.openNativeCallback = (result) => {
             showModal(`App Route opened: ${result}`, 'success');
           };
-          window.bridge.openAppRouteCallbackError = (errorCode, errorDescription) => {
+          window.bridge.openNativeCallbackError = (errorCode, errorDescription) => {
             showModal(
               `App Route Error: ${errorCode}\n${errorDescription}`,
               'error'
