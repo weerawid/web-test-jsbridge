@@ -1187,11 +1187,6 @@
         const flowName = document.getElementById('openNativeFlowName').value;
         const additionalParams = document.getElementById('openNativeAdditionalParams').value;
 
-        if (!featureName || !flowName) {
-          showModal('Please fill in Feature Name and Screen Name', 'warning');
-          return;
-        }
-
          if (window.bridge) {
           window.bridge.openNativeCallback = (result) => {
             showModal(`App Route opened: ${result}`, 'success');
@@ -1207,10 +1202,10 @@
         if (window.bridge) {
           const obj = {
             featureName: featureName,
-            flowName: flowName.trim,
+            flowName: flowName,
             additionalParams: additionalParams
           }
-          const jsonStr = JSON.stringify(obj)
+          const jsonStr = JSON.stringify(Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != "")))
           sendBridge('openNative', [
             { key: 'payload', value: jsonStr }
           ]);
