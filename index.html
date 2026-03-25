@@ -1362,10 +1362,6 @@
         const productId = document.getElementById('generatePaySlipProductId').value;
         const transactionRefId = document.getElementById('generatePaySlipTransactionRefId').value;
 
-        sendBridge('generatePaySlip', [
-          { key: 'productId', value: productId },
-          { key: 'transactionRefId', value: transactionRefId },
-        ]);
 
         if (window.bridge) {
           window.bridge.generatePaySlipCallback = (paySlipData) => {
@@ -1374,6 +1370,21 @@
           window.bridge.generatePaySlipCallbackError = (errorCode, errorDescription) => {
             showModal(`Pay Slip Error: ${errorCode}\n${errorDescription}`, 'error');
           };
+        }
+
+        if (window.bridge) {
+          const payload = {
+            productId: productId,
+            transactionRefId: transactionRefId
+          }
+          sendBridge('generatePaySlip', [
+            { key: 'payload', value: payload }
+          ]);
+        } else {
+          sendBridge('generatePaySlip', [
+          { key: 'productId', value: productId },
+          { key: 'transactionRefId', value: transactionRefId },
+        ]);
         }
       }
 
