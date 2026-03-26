@@ -616,11 +616,18 @@
             <div class="section-header mt">App Route</div>
             <div class="form-group">
               <label class="form-label">Feature Name</label>
-              <input class="form-input" id="openNativeFeatureName" type="text" placeholder="feature_name">
+              <select id="openNativeFeatureName" class="form-input" >
+                <option value="">-- เลือก Feature --</option>
+                <option value="setting">setting</option>
+                <option value="mfoa">mfoa</option>
+                <option value="sfcd">sfcd</option>
+              </select>
             </div>
             <div class="form-group">
               <label class="form-label">Flow Name</label>
-              <input class="form-input" id="openNativeFlowName" type="text" placeholder="flow_name">
+              <select id="openNativeFlowName"  class="form-input" >
+                <option value="">-- เลือก Flow --</option>
+              </select>
             </div>
             <div class="form-group">
               <label class="form-label">Additional Data</label>
@@ -861,6 +868,39 @@
       // ===== BRIDGE CORE =====
       window.bridge = {};
       let arrayListCallbackName = {};
+
+      const optionFeature = document.getElementById("openNativeFeatureName");
+      const optionFlow = document.getElementById("openNativeFlowName");
+
+      optionFeature.addEventListener("change", function () {
+        const value = this.value;
+
+        if (!value) {
+          optionFlow.innerHTML = '<option value="">-- เลือก Flow --</option>';
+          optionFlow.disabled = true;
+          return;
+        }
+
+        optionFlow.disabled = false;
+
+        if (value === "setting") {
+          optionFlow.innerHTML = `
+            <option value="setting-edit-customer-information">edit-customer-information</option>
+          `;
+        } else if (value === "mfoa") {
+          optionFlow.innerHTML = `
+            <option value="mfoa-open-account">open-account</option>
+            <option value="mfoa-risk-assessment">risk-assessment</option>
+            <option value="mfoa-risk-profile">risk-profile</option>
+            <option value="mfoa-tnc">tnc</option>
+            <option value="mfoa-fund-account-details">fund-account-details</option>
+          `;
+        } else if (value === "sfcd") {
+          optionFlow.innerHTML = `
+            <option value="sfcd-open-account">open-account</option>
+          `;
+        }
+      });
 
       function sendBridge(funcName, msg) {
         const functionName = funcName;
