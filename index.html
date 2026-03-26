@@ -1226,36 +1226,35 @@
         const featureName = document.getElementById('openNativeFeatureName').innerText;
         const flowName = document.getElementById('openNativeFlowName').innerText;
         const additionalParams = document.getElementById('openNativeAdditionalParams').value;
-        showModal(flowName)
-        //  if (window.bridge) {
-        //   window.bridge.openNativeCallback = (result) => {
-        //     showModal(`App Route opened: ${result}`, 'success');
-        //   };
-        //   window.bridge.openNativeCallbackError = (errorCode, errorDescription) => {
-        //     showModal(
-        //       `App Route Error: ${errorCode}\n${errorDescription}`,
-        //       'error'
-        //     );
-        //   };
-        // }
+         if (window.bridge) {
+          window.bridge.openNativeCallback = (result) => {
+            showModal(`App Route opened: ${result}`, 'success');
+          };
+          window.bridge.openNativeCallbackError = (errorCode, errorDescription) => {
+            showModal(
+              `App Route Error: ${errorCode}\n${errorDescription}`,
+              'error'
+            );
+          };
+        }
 
-        // if (window.bridge) {
-        //   const obj = {
-        //     featureName: featureName,
-        //     flowName: flowName,
-        //     additionalParams: additionalParams
-        //   }
-        //   const jsonStr = JSON.stringify(Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != "")))
-        //   sendBridge('openNative', [
-        //     { key: 'payload', value: jsonStr }
-        //   ]);
-        // } else {
-        //    sendBridge('openNative', [
-        //     { key: 'featureName', value: featureName },
-        //     { key: 'flowName', value: flowName },
-        //     { key: 'additionalParams', value: additionalParams },
-        //   ]);
-        // }
+        if (window.bridge) {
+          const obj = {
+            featureName: featureName,
+            flowName: flowName,
+            additionalParams: additionalParams
+          }
+          const jsonStr = JSON.stringify(Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != "")))
+          sendBridge('openNative', [
+            { key: 'payload', value: jsonStr }
+          ]);
+        } else {
+           sendBridge('openNative', [
+            { key: 'featureName', value: featureName },
+            { key: 'flowName', value: flowName },
+            { key: 'additionalParams', value: additionalParams },
+          ]);
+        }
       }
 
       function openMicrosite() {
